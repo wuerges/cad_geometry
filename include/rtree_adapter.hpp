@@ -46,7 +46,7 @@ public:
         int v1[3], v2[3];
         to_intv(center.a, v1);
         to_intv(center.b, v2);        
-        return tree.SearchDiamond(v1, v2, radius, f);
+        return tree.SearchDiamond(v1, v2, radius, [&f,this](int i) { return f(shapes[i]); });
     }
     
     // template <typename Func>

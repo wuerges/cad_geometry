@@ -94,6 +94,11 @@ public:
   /// \param a_context User context to pass as parameter to a_resultCallback
   /// \return Returns the number of entries found
   int Search(const ELEMTYPE a_min[NUMDIMS], const ELEMTYPE a_max[NUMDIMS], std::function<bool (const DATATYPE&)> callback) const;
+  int SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
+                      const ELEMTYPE a_max[NUMDIMS], 
+                      const int radius,
+                      std::function<bool (const DATATYPE&)> callback) const;
+
   
   /// Remove all entries from tree
   void RemoveAll();
@@ -363,6 +368,11 @@ protected:
   bool SaveRec(Node* a_node, RTFileStream& a_stream);
   bool LoadRec(Node* a_node, RTFileStream& a_stream);
   void CopyRec(Node* current, Node* other);
+  bool SearchDiamond(
+    Node* a_node, 
+    Rect* a_rect, int& a_foundCount, 
+    int radius, 
+    std::function<bool (const DATATYPE&)> callback) const;
 
   Node* m_root;                                    ///< Root of tree
   ELEMTYPEREAL m_unitSphereVolume;                 ///< Unit sphere constant for required number of dimensions
@@ -582,7 +592,7 @@ int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS],
   // NOTE: May want to return search result another way, perhaps returning the number of found elements here.
 
   int foundCount = 0;
-  Search(m_root, &rect, foundCount, callback);
+  SearchDiamond(m_root, &rect, foundCount, radius, callback);
 
   return foundCount;
 }
@@ -1660,6 +1670,54 @@ bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, std::func
     for(int index=0; index < a_node->m_count; ++index)
     {
       if(Overlap(a_rect, &a_node->m_branch[index].m_rect))
+      {
+        DATATYPE& id = a_node->m_branch[index].m_data;
+        ++a_foundCount;
+
+          if(callback && !callback(id))
+          {
+            return false; // Don't continue searching
+          }
+      }
+    }
+  }
+
+  return true; // Continue searching
+}
+
+// Search in an index tree or subtree for all data retangles that overlap the argument rectangle.
+RTREE_TEMPLATE
+bool RTREE_QUAL::SearchDiamond(
+  Node* a_node, 
+  Rect* a_rect, int& a_foundCount, 
+  int radius, 
+  std::function<bool (const DATATYPE&)> callback) const
+{
+  ASSERT(a_node);
+  ASSERT(a_node->m_level >= 0);
+  ASSERT(a_rect);
+
+  if(a_node->IsInternalNode())
+  {
+    // This is an internal node in the tree
+    for(int index=0; index < a_node->m_count; ++index)
+    {
+      if(OverlapDiamond(a_rect, &a_node->m_branch[index].m_rect, radius))
+      {
+        if(!Search(a_node->m_branch[index].m_child, a_rect, a_foundCount, callback))
+        {
+          // The callback indicated to stop searching
+          return false;
+        }
+      }
+    }
+  }
+  else
+  {
+    // This is a leaf node
+    for(int index=0; index < a_node->m_count; ++index)
+    {
+      if(OverlapDiamond(a_rect, &a_node->m_branch[index].m_rect, radius))
       {
         DATATYPE& id = a_node->m_branch[index].m_data;
         ++a_foundCount;
