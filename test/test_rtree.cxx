@@ -5,7 +5,6 @@ using namespace std;
 
 int main () {
 
-    cout << "\n---------------\nend\n";
     RTree tree;
 
     Shape s1(PT(0,0,0), PT(0,0,0));

@@ -360,6 +360,7 @@ protected:
   void FreeListNode(ListNode* a_listNode);
   bool Overlap(Rect* a_rectA, Rect* a_rectB) const;
   bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const;
+  int distance(Rect* a_rectA, Rect* a_rectB) const;
   void ReInsert(Node* a_node, ListNode** a_listNode);
   bool Search(Node* a_node, Rect* a_rect, int& a_foundCount, std::function<bool (const DATATYPE&)> callback) const;
   void RemoveAllRec(Node* a_node);
@@ -1625,6 +1626,49 @@ bool RTREE_QUAL::Overlap(Rect* a_rectA, Rect* a_rectB) const
     }
   }
   return true;
+}
+
+
+int dist(int a, int b, int aw, int bw) {
+    if(a < b) {
+        if(a + aw < b) {
+            return b - a - aw;
+        }
+        return 0;
+    }
+    else {
+        if(b + bw < a) {
+            return a - b - bw;
+        }
+        return 0;
+    }
+}
+
+
+RTREE_TEMPLATE
+int RTREE_QUAL::distance(Rect* a_rectA, Rect* a_rectB) const {
+  ASSERT(a_rectA && a_rectB);
+
+  int sum = 0;
+
+  for(int index=0; index < NUMDIMS; ++index)
+  {
+    int a = a_rectA->m_min[index];
+    int b = a_rectB->m_min[index];
+    int aw = abs(a_rectA->m_min[index] - a_rectA->m_max[index]);
+    int bw = abs(a_rectB->m_min[index] - a_rectB->m_max[index]);
+    sum += dist(a, b, aw, bw);
+  }
+  return sum;
+}
+
+
+// Decide whether two rectangles overlap.
+RTREE_TEMPLATE
+bool RTREE_QUAL::OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const
+{
+  ASSERT(a_rectA && a_rectB);
+  return distance(a_rectA, a_rectB) <= radius;
 }
 
 
