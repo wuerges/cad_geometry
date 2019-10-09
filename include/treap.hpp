@@ -19,30 +19,35 @@ const bool sphere_contains(const PT center, int radius, const PT a, const PT b);
 
 
 struct Node {
-  Node(const Shape _x) : x(_x), low(min(_x.a, _x.b)), high(max(_x.a, _x.b)), count(1) {}
+    Node(const Shape _x) : x(_x), low(min(_x.a, _x.b)), high(max(_x.a, _x.b)), count(1) {}
 
-  const Shape x;
-  PT low, high;
-  int count;
+    const Shape x;
+    PT low, high;
+    int count;
 
-  std::unique_ptr<Node> left, right;
+    std::unique_ptr<Node> left, right;
 
-  void add(const Shape &shape, int level = 0);
-  bool hits(const PT l, const PT r, int level = 0);
-  int query(const PT l, const PT r, int level = 0);
-  int query_sphere(const PT center, int radius, int level = 0);
-  int query_diamond(const Shape & center, int radius, int level = 0);
-  // int query_diamond_2(const Shape & center, int radius1, int radius2, int level = 0);
-  int collect(std::vector<Shape> &results, const PT l, const PT r,
-              int level = 0);
-  int collect_sphere(std::vector<Shape> &results, const PT center, int radius,
-                     int level = 0);
-  int collect_diamond(std::vector<Shape> &results, const Shape & center, int radius,
-                     int level = 0);
-  int collect_diamond_2(std::vector<Shape> &results, const Shape & center, 
-                    int radius1, int radius2,
-                     int level = 0);
-  void print(int h = 0, int level = 0);
+    void add(const Shape &shape, int level = 0);
+    bool hits(const PT l, const PT r, int level = 0);
+    int query(const PT l, const PT r, int level = 0);
+    int query_sphere(const PT center, int radius, int level = 0);
+    int query_diamond(const Shape & center, int radius, int level = 0);
+    // int query_diamond_2(const Shape & center, int radius1, int radius2, int level = 0);
+    int collect(std::vector<Shape> &results, const PT l, const PT r,
+        int level = 0);
+    int collect_sphere(std::vector<Shape> &results, const PT center, int radius,
+                int level = 0);
+    int collect_diamond(std::vector<Shape> &results, const Shape & center, int radius,
+                int level = 0);
+    int collect_diamond_2(std::vector<Shape> &results, const Shape & center, 
+            int radius1, int radius2,
+                int level = 0);
+    template<typename Func >
+
+    // Visits every shape that is close to the center shape, given a radius.
+    // For each visited shape, apply f. If f returns false, stops the visit.
+    int visit_diamond(const Shape & center, int radius, Func f, int level = 0);
+    void print(int h = 0, int level = 0);
 };
 
 /**

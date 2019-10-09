@@ -72,6 +72,39 @@ int test_treap_collect(const vector<Shape> &shapes) {
   return 0;
 }
 
+void test_treap_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
+
+    Treap treap;
+    treap.populate(shapes);
+
+    radius = std::min(radius, 10000u);
+
+    auto res = treap.collect_diamond(center, radius+1);  
+
+  
+    set<Shape> shapeset;
+    shapeset.insert(res.begin(), res.end());
+
+    for (const Shape &s : shapes) {
+        RC_LOG() << "------------------\n";
+        RC_LOG() << "shape=" << s << "\n";
+        RC_LOG() << "  distance=" << distance(center, s) << "\n";
+        RC_LOG() << "  radius=" << radius << '\n';
+        RC_LOG() << "  found ? " << (shapeset.find(s) != shapeset.end() ? "true" : "false") << '\n';
+    }
+    
+
+    for (const Shape &s : shapes) {
+        if(distance(center, s) <= radius) {            
+            RC_ASSERT(shapeset.find(s) != shapeset.end());
+        }
+        else {
+            RC_ASSERT(shapeset.find(s) == shapeset.end());
+        }
+    }
+
+}
+
 int test_treap_collect_neg(const vector<Shape> &shapes) {
   if (shapes.size() == 0) {
     RC_DISCARD("discarding empty testcase");
@@ -139,6 +172,8 @@ int main(int n, char **argv) {
       [](const std::vector<Shape> &shapes) { test_treap_collect_neg(shapes); });
 
   rc::check("Check that hits is equivalent to query > 0", test_treap_hits);
+
+  rc::check("Check treap_collect_diamond.", test_treap_collect_diamond);
 
   // vector<Shape> shapes;
   //

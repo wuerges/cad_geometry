@@ -258,6 +258,7 @@ int Node::collect_sphere(std::vector<Shape> &results, const PT center,
 
 int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
                          int radius, int level) {
+                             
   if (  ((center.a[level % 3] - radius) > high[level % 3])
      || ((center.b[level % 3] + radius) < low[level % 3])   ) {
     return 0;
@@ -282,6 +283,29 @@ int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
          (left ? left->collect_diamond(results, center, radius, level + 1) : 0) +
          (right ? right->collect_diamond(results, center, radius, level + 1)
                 : 0);
+}
+
+// Visits every shape that is close to the center shape, given a radius.
+    // For each visited shape, apply f. If f returns false, stops the visit.
+template<typename Func>
+int Node::visit_diamond(const Shape & center, int radius, Func f, int level) {
+    if (  ((center.a[level % 3] - radius) > high[level % 3])
+        || ((center.b[level % 3] + radius) < low[level % 3]) ) {
+        return 0;
+    }
+
+
+
+    bool hits = diamond_collides(center, radius, x.a, x.b);
+    if (hits) {
+        if (!f(x)) return 0;
+    }
+
+    return (hits ? 1 : 0) +
+            (left ? left->collect_diamond(center, radius, f, level + 1) : 0) +
+            (right ? right->collect_diamond(center, radius, f, level + 1)
+            : 0);
+    
 }
 
 int Node::collect_diamond_2(std::vector<Shape> &results, const Shape & center,
