@@ -268,7 +268,7 @@ int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
 
   // std::cout << "collect_sphere\n";
   bool hits = diamond_collides(center, radius, x.a, x.b);
-  // std::cout << "center: " << center << " radius = " << radius << " (" << x << ")\n";
+//   std::cout << "center: " << center << " radius = " << radius << " (" << x << ")\n";
   if (hits) {
     // std::cout << "HIT! " << x <<'\n';
     results.push_back(x);

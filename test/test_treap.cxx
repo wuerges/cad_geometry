@@ -79,7 +79,7 @@ void test_treap_collect_diamond(const Shape &center, const vector<Shape> &shapes
 
     radius = std::min(radius, 10000u);
 
-    auto res = treap.collect_diamond(center, radius+1);  
+    auto res = treap.collect_diamond(center, radius);  
 
   
     set<Shape> shapeset;
