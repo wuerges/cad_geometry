@@ -42,11 +42,16 @@ struct Node {
     int collect_diamond_2(std::vector<Shape> &results, const Shape & center, 
             int radius1, int radius2,
                 int level = 0);
-    template<typename Func >
 
     // Visits every shape that is close to the center shape, given a radius.
     // For each visited shape, apply f. If f returns false, stops the visit.
+    template<typename Func >
     int visit_diamond(const Shape & center, int radius, Func f, int level = 0);
+    
+    template <typename Func>
+    int visit_diamond_2(const Shape & center,
+                         int radius1, int radius2, Func f, int level = 0);
+    
     void print(int h = 0, int level = 0);
 };
 

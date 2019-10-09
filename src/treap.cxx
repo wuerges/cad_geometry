@@ -258,31 +258,15 @@ int Node::collect_sphere(std::vector<Shape> &results, const PT center,
 
 int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
                          int radius, int level) {
-                             
-  if (  ((center.a[level % 3] - radius) > high[level % 3])
-     || ((center.b[level % 3] + radius) < low[level % 3])   ) {
-    return 0;
-  }
 
-
-
-  // std::cout << "collect_sphere\n";
-  bool hits = diamond_collides(center, radius, x.a, x.b);
-//   std::cout << "center: " << center << " radius = " << radius << " (" << x << ")\n";
-  if (hits) {
-    // std::cout << "HIT! " << x <<'\n';
-    results.push_back(x);
-  }
-
-
-  // if (!sphere_collides(center, radius, low, high)) {
-  //   return 0;
-  // }
-
-  return (hits ? 1 : 0) +
-         (left ? left->collect_diamond(results, center, radius, level + 1) : 0) +
-         (right ? right->collect_diamond(results, center, radius, level + 1)
-                : 0);
+    return visit_diamond(
+        center, 
+        radius, 
+        [&results](const Shape & s)->bool { 
+            results.push_back(s);
+            return true; 
+            },
+            level);
 }
 
 // Visits every shape that is close to the center shape, given a radius.
@@ -302,52 +286,46 @@ int Node::visit_diamond(const Shape & center, int radius, Func f, int level) {
     }
 
     return (hits ? 1 : 0) +
-            (left ? left->collect_diamond(center, radius, f, level + 1) : 0) +
-            (right ? right->collect_diamond(center, radius, f, level + 1)
+            (left ? left->visit_diamond(center, radius, f, level + 1) : 0) +
+            (right ? right->visit_diamond(center, radius, f, level + 1)
             : 0);
     
 }
 
 int Node::collect_diamond_2(std::vector<Shape> &results, const Shape & center,
                          int radius1, int radius2, int level) {
-  if (  ((center.a[level % 3] - radius2) > high[level % 3])
-     || ((center.b[level % 3] + radius2) < low[level % 3])   
-     ) {
-    return 0;
-  }
+    return visit_diamond_2(
+        center, 
+        radius1, 
+        radius2, 
+        [&results](const Shape & s)->bool { 
+            results.push_back(s);
+            return true; 
+            },
+            level);
+}
 
-  // if (!diamond_collides(center, radius2-1, low, high)) return 0;
-  // auto ll = min(low, high);
-  // auto hh = max(low, high);
+template <typename Func>
+int Node::visit_diamond_2(const Shape & center,
+                         int radius1, int radius2, Func f, int level) {
+    if (  ((center.a[level % 3] - radius2) > high[level % 3])
+        || ((center.b[level % 3] + radius2) < low[level % 3])   
+    ) {
+        return 0;
+    }
 
-  // if (distance(center, Shape{ll, hh}) > radius1 ) return 0;
+    if( diamond_contains(center,radius1-1, low, high) ) return 0;
+    bool hits1 = radius1 > 0 && diamond_collides(center, radius1, x.a, x.b);
+    bool hits = diamond_collides(center, radius2, x.a, x.b);
 
-  // if ( ! diamond_collides(center, radius2+1, low, high)) return 0;
+    if (!hits1 && hits) {
+        if (!f(x)) return 0;
+    }
 
-
-  if( diamond_contains(center,radius1-1, low, high) ) return 0;
-  // if (radius1 > 0 && diamond_collides(center, radius1, x.a, x.b)) {
-  //   return 0;
-  // }
-
-  // std::cout << "collect_sphere\n";
-  bool hits1 = radius1 > 0 && diamond_collides(center, radius1, x.a, x.b);
-  bool hits = diamond_collides(center, radius2, x.a, x.b);
-  // std::cout << "center: " << center << " radius = " << radius << " (" << x << ")\n";
-  if (!hits1 && hits) {
-    // std::cout << "HIT! " << x <<'\n';
-    results.push_back(x);
-  }
-
-
-  // if (!sphere_collides(center, radius, low, high)) {
-  //   return 0;
-  // }
-
-  return (hits ? 1 : 0) +
-         (left ? left->collect_diamond_2(results, center, radius1, radius2, level + 1) : 0) +
-         (right ? right->collect_diamond_2(results, center, radius1, radius2, level + 1)
-                : 0);
+    return (hits ? 1 : 0) +
+            (left ? left->visit_diamond_2(center, radius1, radius2, f, level + 1) : 0) +
+            (right ? right->visit_diamond_2(center, radius1, radius2, f, level + 1)
+            : 0);
 }
 
 void Node::print(int h, int level) {
