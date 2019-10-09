@@ -4,6 +4,7 @@
 namespace geometry {
 
     using std::ostream;
+    
     struct PT {
       PT(int _x, int _y, int _z): x(_x), y(_y), z(_z) {}
       PT() {}
@@ -21,8 +22,7 @@ namespace geometry {
       friend const PT min(const PT & a, const PT & b);
       friend const PT max(const PT & a, const PT & b);
 
-      friend const int manhatan(const PT & a, const PT & b);
-
+      friend const int manhatan(const PT & a, const PT & b);      
     };
     /**
      * Two points that represent the oposite points of a cuboid
