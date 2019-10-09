@@ -13,9 +13,6 @@ void test_distance(const Shape & s1, const Shape & s2) {
     RC_LOG() << "distance is " << distance(s1, s2) << '\n';
     RC_LOG() << "collides? " << collides(s1, s2) << '\n';
     
-    auto x = s1;
-    x.a.z = x.b.z = s2.a.z;
-
     if(collides(s1, s2)) {  
         RC_ASSERT(distance(s1, s2) == 0);
     }    

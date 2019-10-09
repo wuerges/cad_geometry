@@ -69,7 +69,8 @@ int dist(int a, int b, int aw, int bw) {
 const int distance(const Shape & s1, const Shape & s2) {
     return dist(s1.a.x, s2.a.x, abs(s1.b.x - s1.a.x),  abs(s2.b.x - s2.a.x))
             + dist(s1.a.y, s2.a.y, abs(s1.b.y - s1.a.y),  abs(s2.b.y - s2.a.y))
-            + abs(s1.a.z - s2.b.z);
+            + dist(s1.a.z, s2.a.z, abs(s1.b.z - s1.a.z),  abs(s2.b.z - s2.a.z));
+            // + abs(s1.a.z - s2.b.z);
 }
 
 const int distance(const PT & pt, const Shape & s2) {

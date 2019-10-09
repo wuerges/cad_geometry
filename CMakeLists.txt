@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 project(cad_geometry CXX)
 set (CMAKE_CXX_STANDARD 17)
 
-add_library(libs
+add_library(cadgeometry
   src/base.cxx  
+  src/treap.cxx
   )
 include_directories(include)
 
