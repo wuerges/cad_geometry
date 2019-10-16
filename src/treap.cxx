@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include <cmath>
 #include <future>
 
@@ -94,23 +95,23 @@ int Node::query_diamond(const Shape & center, int radius, int level) {
 
 
 
-int Node::query(const PT l, const PT r, int level) {
+// int Node::query(const PT l, const PT r, int level) {
 
-  if (l <= low && r >= high) {
-    return count;
-  }
-  if (l > high || r < low) {
-    return 0;
-  }
-  if (l[level % 3] > high[level % 3] || r[level % 3] < low[level % 3]) {
-    return 0;
-  }
+//   if (l <= low && r >= high) {
+//     return count;
+//   }
+//   if (l > high || r < low) {
+//     return 0;
+//   }
+//   if (l[level % 3] > high[level % 3] || r[level % 3] < low[level % 3]) {
+//     return 0;
+//   }
 
-  bool hits = collides(x, Shape{l, r});
+//   bool hits = collides(x, Shape{l, r});
 
-  return (hits ? 1 : 0) + (left ? left->query(l, r, level + 1) : 0) +
-         (right ? right->query(l, r, level + 1) : 0);
-}
+//   return (hits ? 1 : 0) + (left ? left->query(l, r, level + 1) : 0) +
+//          (right ? right->query(l, r, level + 1) : 0);
+// }
 
 bool Node::hits(const PT l, const PT r, int level) {
   // std::cout << "hits: "<< level<<"\n";
@@ -276,44 +277,42 @@ void Node::print(int h, int level) {
 }
 
 std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) const {
-    int base_number = query(u.a, u.b);
-    int mh = manhatan(u.a, u.b);
-    int w = 1;
-    int q = query_diamond(u, w);
-    // std::cout << " w =" << w << "\n";
-    // return collect_diamond(center, t+8000);
 
-    // while (q <= number && w < 1e8) {
-    while (q <= number+base_number && w < 1e8) {
-      w *= 2;
-      q = query_diamond(u, w);
-      // std::cout << "Query=" << q << " w=" << w << '\n';
-      // std::cout << "Query=" << q << " w=" << w
-      //   << " pts=" << PT(l.x-w, l.y-w, l.z-w)
-      //   << " <-> "<<  PT(r.x+w, r.y+w, r.z+w) <<  '\n';
-    }
-    return collect_diamond(u, w);
+  std::vector<Shape> res;
+  std::set<Shape> temp;
+
+  int a = 0, b = 1;
+  while (temp.size() < number) {
+    root->visit_diamond_2(u, a, b, [&temp](const Shape & v) {
+      temp.insert(v);
+      return true;
+    });
+    a = b;
+    b = b*2;
   }
+  for(auto & s : temp) { res.push_back(s); }
+  return res;
+}
 
 
-  std::vector<Shape> Treap::neighboors_sphere(const Shape &u, size_t number) const {
-    int w = 1;
-    PT center =
-        PT{(u.a.x + u.b.x) / 2, (u.a.y + u.b.y) / 2, (u.a.z + u.b.z) / 2};
+  // std::vector<Shape> Treap::neighboors_sphere(const Shape &u, size_t number) const {
+  //   int w = 1;
+  //   PT center =
+  //       PT{(u.a.x + u.b.x) / 2, (u.a.y + u.b.y) / 2, (u.a.z + u.b.z) / 2};
 
-    int t = abs(u.a.x - u.b.x) + abs(u.a.y-u.b.y) + abs(u.a.z-u.b.z);
-    int q = query(center, t+w);
-    // std::cout << " w =" << w << "\n";
-    while (q <= number && w < 1e8) {
-      w = w * 2;
-      q = query(center, t+w);
-      // std::cout << "Query=" << q << " w=" << w << '\n';
-      // std::cout << "Query=" << q << " w=" << w
-      //   << " pts=" << PT(l.x-w, l.y-w, l.z-w)
-      //   << " <-> "<<  PT(r.x+w, r.y+w, r.z+w) <<  '\n';
-    }
-    return collect(center, t+w);
-  }
+  //   int t = abs(u.a.x - u.b.x) + abs(u.a.y-u.b.y) + abs(u.a.z-u.b.z);
+  //   int q = query(center, t+w);
+  //   // std::cout << " w =" << w << "\n";
+  //   while (q <= number && w < 1e8) {
+  //     w = w * 2;
+  //     q = query(center, t+w);
+  //     // std::cout << "Query=" << q << " w=" << w << '\n';
+  //     // std::cout << "Query=" << q << " w=" << w
+  //     //   << " pts=" << PT(l.x-w, l.y-w, l.z-w)
+  //     //   << " <-> "<<  PT(r.x+w, r.y+w, r.z+w) <<  '\n';
+  //   }
+  //   return collect(center, t+w);
+  // }
 
 
   void Treap::populate(const std::vector<Shape> &shapes) {
@@ -331,19 +330,19 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
   }
 
 
-  int Treap::query(const PT l, const PT r) const {
-    if (root) {
-      return root->query(min(l, r), max(l, r));
-    }
-    return 0;
-  }
+  // int Treap::query(const PT l, const PT r) const {
+  //   if (root) {
+  //     return root->query(min(l, r), max(l, r));
+  //   }
+  //   return 0;
+  // }
 
-  int Treap::query(const PT center, int radius) const {
-    if (root) {
-      return root->query_sphere(center, radius);
-    }
-    return 0;
-  }
+  // int Treap::query(const PT center, int radius) const {
+  //   if (root) {
+  //     return root->query_sphere(center, radius);
+  //   }
+  //   return 0;
+  // }
 
   int Treap::query_diamond(const Shape & center, int radius) const {
     if (root) {
@@ -396,22 +395,22 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return results;
   }
 
-  std::vector<Shape> Treap::neighboors(const Shape &u, size_t number) const {
-    int w = 1;
-    PT l = u.a;
-    PT r = u.b;
-    int q = query(PT(l.x - w, l.y - w, l.z - w), PT(r.x + w, r.y + w, r.z + w));
-    // std::cout << " w =" << w << "\n";
-    while (q <= number && w < 1e8) {
-      w = w * 2;
-      q = query(PT(l.x - w, l.y - w, l.z - w), PT(r.x + w, r.y + w, r.z + w));
-      // std::cout << "Query=" << q << " w=" << w
-      //   << " pts=" << PT(l.x-w, l.y-w, l.z-w)
-      //   << " <-> "<<  PT(r.x+w, r.y+w, r.z+w) <<  '\n';
-    }
-    return collect(PT(l.x - w, l.y - w, l.z - w),
-                   PT(l.x + w, l.y + w, l.z + w));
-  }
+  // std::vector<Shape> Treap::neighboors(const Shape &u, size_t number) const {
+  //   int w = 1;
+  //   PT l = u.a;
+  //   PT r = u.b;
+  //   int q = query(PT(l.x - w, l.y - w, l.z - w), PT(r.x + w, r.y + w, r.z + w));
+  //   // std::cout << " w =" << w << "\n";
+  //   while (q <= number && w < 1e8) {
+  //     w = w * 2;
+  //     q = query(PT(l.x - w, l.y - w, l.z - w), PT(r.x + w, r.y + w, r.z + w));
+  //     // std::cout << "Query=" << q << " w=" << w
+  //     //   << " pts=" << PT(l.x-w, l.y-w, l.z-w)
+  //     //   << " <-> "<<  PT(r.x+w, r.y+w, r.z+w) <<  '\n';
+  //   }
+  //   return collect(PT(l.x - w, l.y - w, l.z - w),
+  //                  PT(l.x + w, l.y + w, l.z + w));
+  // }
 
 
 } // namespace iccad
