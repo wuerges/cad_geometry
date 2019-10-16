@@ -50,6 +50,16 @@ namespace geometry {
     };    
 
 
+const bool sphere_collides(const PT center, int radius32, const int64_t y, const int z, const int64_t x1, const int64_t x2);
+const bool sphere_collides(const PT center, int radius32, const PT low,
+                           const PT high);
+const bool sphere_contains(const PT center, int radius, const PT a, const PT b);
+
+const bool diamond_collides(const Shape & center, int radius32, const PT low,
+                           const PT high);
+const bool diamond_contains(const Shape & center, int radius32, const PT low,
+                           const PT high);
+
 }
 
 namespace std {
