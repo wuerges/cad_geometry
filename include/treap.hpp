@@ -10,6 +10,8 @@ namespace geometry {
 /**
  * A facade for the Treap, with easier to use functions.
  */
+
+struct Node;
 struct Treap {
 
   void populate(const std::vector<Shape> &shapes);
