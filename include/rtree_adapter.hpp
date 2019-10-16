@@ -11,11 +11,6 @@ namespace geometry {
 using std::vector;
 
 
-void to_intv(const PT & p, int* v) {
-    v[0] = p.x;
-    v[1] = p.y;
-    v[2] = p.z;
-}
 
 class RTree {
     using MyTree = rtree::RTree<int, int, 3, double>;
@@ -32,5 +27,11 @@ public:
     int visit_diamond(const Shape & center, int radius, Func f);
     
 };
+
+void to_intv(const PT & p, int* v) {
+    v[0] = p.x;
+    v[1] = p.y;
+    v[2] = p.z;
+}
 
 }
