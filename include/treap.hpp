@@ -7,16 +7,31 @@
 
 namespace geometry {
 
-const bool sphere_collides(const PT center, int radius32, const int64_t y, const int z, const int64_t x1, const int64_t x2);
-const bool sphere_collides(const PT center, int radius32, const PT low,
-                           const PT high);
-const bool sphere_contains(const PT center, int radius, const PT a, const PT b);
+/**
+ * A facade for the Treap, with easier to use functions.
+ */
+struct Treap {
 
-// const bool diamond_collides(const Shape & center, int radius32, const PT low,
-//                            const PT high);
-// const bool diamond_contains(const Shape & center, int radius32, const PT low,
-//                            const PT high);
+  void populate(const std::vector<Shape> &shapes);
+  void add(const Shape &shape);
+  int query(const PT l, const PT r) const;
+  int hits(const PT l, const PT r) const;
+  std::vector<Shape> collect(const PT l, const PT r) const;
+  std::vector<Shape> neighboors_diamond(const Shape &u, size_t number) const;
+  std::vector<Shape> collect_diamond(const Shape & center, int radius) const;
+  std::vector<Shape> collect_diamond_2(const Shape & center, int radius1, int radius2) const;
+  
+  private:
+  
+  int query(const PT center, int radius) const;
+  int query_diamond(const Shape & center, int radius) const;
 
+  std::vector<Shape> collect(const PT center, int radius) const;
+  std::vector<Shape> neighboors(const Shape &u, size_t number) const;
+  std::vector<Shape> neighboors_sphere(const Shape &u, size_t number) const;
+  std::unique_ptr<Node> root;
+
+};
 
 struct Node {
     Node(const Shape _x) : x(_x), low(min(_x.a, _x.b)), high(max(_x.a, _x.b)), count(1) {}
@@ -55,29 +70,5 @@ struct Node {
     void print(int h = 0, int level = 0);
 };
 
-/**
- * A facade for the Treap, with easier to use functions.
- */
-struct Treap {
 
-  void populate(const std::vector<Shape> &shapes);
-  void add(const Shape &shape);
-  int query(const PT l, const PT r) const;
-  int hits(const PT l, const PT r) const;
-  std::vector<Shape> collect(const PT l, const PT r) const;
-  std::vector<Shape> neighboors_diamond(const Shape &u, size_t number) const;
-  std::vector<Shape> collect_diamond(const Shape & center, int radius) const;
-  std::vector<Shape> collect_diamond_2(const Shape & center, int radius1, int radius2) const;
-  
-  private:
-  
-  int query(const PT center, int radius) const;
-  int query_diamond(const Shape & center, int radius) const;
-
-  std::vector<Shape> collect(const PT center, int radius) const;
-  std::vector<Shape> neighboors(const Shape &u, size_t number) const;
-  std::vector<Shape> neighboors_sphere(const Shape &u, size_t number) const;
-  std::unique_ptr<Node> root;
-
-};
-} // namespace iccad
+} // namespace geometry
