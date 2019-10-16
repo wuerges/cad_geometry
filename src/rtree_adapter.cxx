@@ -67,13 +67,15 @@ std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) cons
   std::set<Shape> temp;
 
   int a = 0, b = 1;
-  while (temp.size() < number) {
+  int nmax = 0;  
+  while (temp.size() < number && nmax < 100) {
     visit_diamond(u, b, [&temp](const Shape & v) {
       temp.insert(v);
       return true;
     });
     a = b;
     b = b*2;
+    nmax++;
   }
   for(auto & s : temp) { res.push_back(s); }
   return res;
@@ -101,6 +103,11 @@ std::vector<Shape> RTree::collect_diamond_2(const Shape & u, int radius1, int ra
     return res; 
 }
 
+void to_intv(const PT & p, int* v) {
+    v[0] = p.x;
+    v[1] = p.y;
+    v[2] = p.z;
+}
 
 
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <rtree_adapter.hpp>
 
 namespace geometry {
 
@@ -11,8 +12,9 @@ namespace geometry {
  * A facade for the Treap, with easier to use functions.
  */
 
+
 struct Node;
-struct Treap {
+struct AIT {
 
   void populate(const std::vector<Shape> &shapes);
   void add(const Shape &shape);
@@ -32,6 +34,7 @@ struct Treap {
   std::unique_ptr<Node> root;
 
 };
+using Treap = RTree;
 
 struct Node {
     Node(const Shape _x) : x(_x), low(min(_x.a, _x.b)), high(max(_x.a, _x.b)), count(1) {}

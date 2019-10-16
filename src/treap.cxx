@@ -276,7 +276,7 @@ void Node::print(int h, int level) {
   }
 }
 
-std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) const {
+std::vector<Shape> AIT::neighboors_diamond(const Shape &u, size_t number) const {
 
   std::vector<Shape> res;
   
@@ -294,7 +294,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
 }
 
 
-  // std::vector<Shape> Treap::neighboors_sphere(const Shape &u, size_t number) const {
+  // std::vector<Shape> AIT::neighboors_sphere(const Shape &u, size_t number) const {
   //   int w = 1;
   //   PT center =
   //       PT{(u.a.x + u.b.x) / 2, (u.a.y + u.b.y) / 2, (u.a.z + u.b.z) / 2};
@@ -314,13 +314,13 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
   // }
 
 
-  void Treap::populate(const std::vector<Shape> &shapes) {
+  void AIT::populate(const std::vector<Shape> &shapes) {
     for (const Shape &s : shapes) {
       add(s);
     }
   }
 
-  void Treap::add(const Shape &shape) {
+  void AIT::add(const Shape &shape) {
     if (root) {
       root->add(shape);
     } else {
@@ -329,28 +329,28 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
   }
 
 
-  // int Treap::query(const PT l, const PT r) const {
+  // int AIT::query(const PT l, const PT r) const {
   //   if (root) {
   //     return root->query(min(l, r), max(l, r));
   //   }
   //   return 0;
   // }
 
-  // int Treap::query(const PT center, int radius) const {
+  // int AIT::query(const PT center, int radius) const {
   //   if (root) {
   //     return root->query_sphere(center, radius);
   //   }
   //   return 0;
   // }
 
-  int Treap::query_diamond(const Shape & center, int radius) const {
+  int AIT::query_diamond(const Shape & center, int radius) const {
     if (root) {
       return root->query_diamond(center, radius);
     }
     return 0;
   }
 
-  bool Treap::hits(const PT l, const PT r) const {
+  bool AIT::hits(const PT l, const PT r) const {
     if (root) {
       return root->hits(min(l, r), max(l, r));
     }
@@ -358,7 +358,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
   }
 
 
-  std::vector<Shape> Treap::collect(const PT l, const PT r) const {
+  std::vector<Shape> AIT::collect(const PT l, const PT r) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -367,7 +367,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return results;
   }
 
-  std::vector<Shape> Treap::collect(const PT center, int radius) const {
+  std::vector<Shape> AIT::collect(const PT center, int radius) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -376,7 +376,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return results;
   }
 
-  std::vector<Shape> Treap::collect_diamond(const Shape & center, int radius) const {
+  std::vector<Shape> AIT::collect_diamond(const Shape & center, int radius) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -385,7 +385,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return results;
   }
 
-  std::vector<Shape> Treap::collect_diamond_2(const Shape & center, int radius1, int radius2) const {
+  std::vector<Shape> AIT::collect_diamond_2(const Shape & center, int radius1, int radius2) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -394,7 +394,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return results;
   }
 
-  // std::vector<Shape> Treap::neighboors(const Shape &u, size_t number) const {
+  // std::vector<Shape> AIT::neighboors(const Shape &u, size_t number) const {
   //   int w = 1;
   //   PT l = u.a;
   //   PT r = u.b;

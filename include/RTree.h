@@ -360,6 +360,7 @@ protected:
   void FreeListNode(ListNode* a_listNode);
   bool Overlap(Rect* a_rectA, Rect* a_rectB) const;
   bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const;
+  int dist(int a, int b, int aw, int bw) const ;
   int distance(Rect* a_rectA, Rect* a_rectB) const;
   void ReInsert(Node* a_node, ListNode** a_listNode);
   bool Search(Node* a_node, Rect* a_rect, int& a_foundCount, std::function<bool (const DATATYPE&)> callback) const;
@@ -1629,7 +1630,8 @@ bool RTREE_QUAL::Overlap(Rect* a_rectA, Rect* a_rectB) const
 }
 
 
-int dist(int a, int b, int aw, int bw) {
+RTREE_TEMPLATE
+int RTREE_QUAL::dist(int a, int b, int aw, int bw) const {
     if(a < b) {
         if(a + aw < b) {
             return b - a - aw;

@@ -36,10 +36,6 @@ public:
     
 };
 
-void to_intv(const PT & p, int* v) {
-    v[0] = p.x;
-    v[1] = p.y;
-    v[2] = p.z;
-}
+void to_intv(const PT & p, int* v);
 
 }
