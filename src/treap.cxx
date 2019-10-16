@@ -279,18 +279,17 @@ void Node::print(int h, int level) {
 std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) const {
 
   std::vector<Shape> res;
-  std::set<Shape> temp;
-
+  
   int a = 0, b = 1;
-  while (temp.size() < number) {
-    root->visit_diamond_2(u, a, b, [&temp](const Shape & v) {
-      temp.insert(v);
+  while (res.size() < number) {
+    root->visit_diamond_2(u, a, b, [&res](const Shape & v) {
+      res.push_back(v);
       return true;
     });
     a = b;
     b = b*2;
   }
-  for(auto & s : temp) { res.push_back(s); }
+  
   return res;
 }
 
@@ -351,7 +350,7 @@ std::vector<Shape> Treap::neighboors_diamond(const Shape &u, size_t number) cons
     return 0;
   }
 
-  int Treap::hits(const PT l, const PT r) const {
+  bool Treap::hits(const PT l, const PT r) const {
     if (root) {
       return root->hits(min(l, r), max(l, r));
     }

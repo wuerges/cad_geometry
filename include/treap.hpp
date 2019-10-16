@@ -16,8 +16,7 @@ struct Treap {
 
   void populate(const std::vector<Shape> &shapes);
   void add(const Shape &shape);
-//   int query(const PT l, const PT r) const;
-  int hits(const PT l, const PT r) const;
+  bool hits(const PT l, const PT r) const;
   std::vector<Shape> collect(const PT l, const PT r) const;
   std::vector<Shape> neighboors_diamond(const Shape &u, size_t number) const;
   std::vector<Shape> collect_diamond(const Shape & center, int radius) const;
@@ -25,7 +24,6 @@ struct Treap {
   
   private:
   
-//   int query(const PT center, int radius) const;
   int query_diamond(const Shape & center, int radius) const;
 
   std::vector<Shape> collect(const PT center, int radius) const;
