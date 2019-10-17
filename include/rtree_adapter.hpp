@@ -39,5 +39,7 @@ public:
 };
 
 void to_intv(const PT & p, int* v);
+RTree::MyTree::Rect to_rect(const Shape & s);
 
 }
+

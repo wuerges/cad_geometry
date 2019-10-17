@@ -15,12 +15,12 @@ using namespace geometry;
 using namespace std;
 
 
-RTree::MyTree::Rect to_rect(const Shape & s) {
-    RTree::MyTree::Rect r;
-    to_intv(s.a, r.m_min);    
-    to_intv(s.b, r.m_max);
-    return r;
-}
+// RTree::MyTree::Rect to_rect(const Shape & s) {
+//     RTree::MyTree::Rect r;
+//     to_intv(s.a, r.m_min);    
+//     to_intv(s.b, r.m_max);
+//     return r;
+// }
 
 void test_rtree_distance(const Shape &a, const Shape &b) {
 

@@ -25,18 +25,14 @@ void RTree::add(const Shape &shape) {
 int RTree::visit_diamond(const Shape & center, int radius, 
     const std::function <bool (const Shape &)>& f
     ) const {
-    int v1[3], v2[3];
-    to_intv(center.a, v1);
-    to_intv(center.b, v2);        
-    return tree.SearchDiamond(v1, v2, radius, [&f,this](int i)->bool { return f(shapes[i]); });
+    auto p = to_rect(center);    
+    return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
 }
 
 int RTree::visit(const Shape & center, 
     const std::function <bool (const Shape &)>& f) const {
-    int v1[3], v2[3];
-    to_intv(center.a, v1);
-    to_intv(center.b, v2);        
-    return tree.Search(v1, v2, [&f,this](int i) { return f(shapes[i]); });
+    auto p = to_rect(center);    
+    return tree.Search(p.m_min, p.m_max, [&f,this](int i) { return f(shapes[i]); });
 }
 
 
@@ -110,5 +106,11 @@ void to_intv(const PT & p, int* v) {
     v[2] = p.z;
 }
 
+RTree::MyTree::Rect to_rect(const Shape & s) {
+    RTree::MyTree::Rect r;
+    to_intv(s.a, r.m_min);    
+    to_intv(s.b, r.m_max);
+    return r;
+}
 
 }
