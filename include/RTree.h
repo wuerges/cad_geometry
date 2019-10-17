@@ -615,6 +615,36 @@ int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS],
   return foundCount;
 }
 
+RTREE_TEMPLATE
+int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
+                       const ELEMTYPE a_max[NUMDIMS], 
+                       const unsigned radius1,
+                       const unsigned radius2,
+                       std::function<bool (const DATATYPE&)> callback) const
+{
+#ifdef _DEBUG
+  for(int index=0; index<NUMDIMS; ++index)
+  {
+    ASSERT(a_min[index] <= a_max[index]);
+  }
+#endif //_DEBUG
+
+  Rect rect;
+  
+  for(int axis=0; axis<NUMDIMS; ++axis)
+  {
+    rect.m_min[axis] = a_min[axis];
+    rect.m_max[axis] = a_max[axis];
+  }
+
+  // NOTE: May want to return search result another way, perhaps returning the number of found elements here.
+
+  int foundCount = 0;
+  SearchDiamond(m_root, &rect, foundCount, radius1, radius2, callback);
+
+  return foundCount;
+}
+
 
 RTREE_TEMPLATE
 int RTREE_QUAL::Count()
@@ -1705,7 +1735,7 @@ bool RTREE_QUAL:: ContainsDiamond(Rect* a_rectA, Rect* a_rectB, unsigned radius)
                 r.m_min[1] = r.m_max[1] = pts[y][1];
                 r.m_min[2] = r.m_max[2] = pts[z][2];
 
-                if(!OverlapDiamond(r, radius)) {
+                if(!OverlapDiamond(a_rectA, &r, radius)) {
                     return false;
                 }
             }

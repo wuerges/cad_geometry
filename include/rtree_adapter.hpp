@@ -34,6 +34,8 @@ public:
 
     int visit_diamond(const Shape & center, unsigned radius, 
         const std::function <bool (const Shape &)>& f) const;
+    int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
+        const std::function <bool (const Shape &)>& f) const;
     
     
 };

@@ -29,6 +29,13 @@ int RTree::visit_diamond(const Shape & center, unsigned radius,
     return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
 }
 
+int RTree::visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
+    const std::function <bool (const Shape &)>& f
+    ) const {
+    auto p = to_rect(center);    
+    return tree.SearchDiamond(p.m_min, p.m_max, radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
+}
+
 int RTree::visit(const Shape & center, 
     const std::function <bool (const Shape &)>& f) const {
     auto p = to_rect(center);    
@@ -61,22 +68,18 @@ std::vector<Shape> RTree::collect(const PT l, const PT r) const {
 std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) const {
 
   std::vector<Shape> res;
-  std::set<Shape> temp;
 
   int a = 0, b = 1;
-  int nmax = 0;  
-  while (temp.size() < number && nmax < 100) {
-    visit_diamond(u, b, [&temp](const Shape & v) {
-      temp.insert(v);
+  const int MAXB = 1e8;
+  while (res.size() < number && b < MAXB) {
+    visit_diamond_2(u, a, b, [&res](const Shape & v) {
+      res.push_back(v);
       return true;
     });
     a = b;
     b = b*2;
-    nmax++;
   }
-  for(auto & s : temp) { res.push_back(s); }
   return res;
-
 }
 
 
@@ -91,10 +94,8 @@ std::vector<Shape> RTree::collect_diamond(const Shape & u, unsigned radius) cons
 }
 std::vector<Shape> RTree::collect_diamond_2(const Shape & u, unsigned radius1, unsigned radius2) const {
    std::vector<Shape> res;
-    visit_diamond(u, radius2, [radius1, &u,&res](const Shape & v) {
-        if(radius1==0  || distance(u, v) > radius1) {
-            res.push_back(v);
-        }
+    visit_diamond_2(u, radius1, radius2, [&res](const Shape & v) {
+        res.push_back(v);
         return true;
     });
     return res; 
