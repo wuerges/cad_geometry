@@ -30,7 +30,7 @@ namespace rc {
         [](const array<PT, 2> pts) {
             PT a = min(pts[0], pts[1]);
             PT b = max(pts[0], pts[1]);
-            // a.z = b.z;
+            a.z = b.z;
           return Shape(a, b);
         });
     }
