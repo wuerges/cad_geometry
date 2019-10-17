@@ -49,13 +49,13 @@ struct Node {
 
     // Visits every shape that is close to the center shape, given a radius.
     // For each visited shape, apply f. If f returns false, stops the visit.
-    template<typename Func >
-    int visit_diamond(const Shape & center, int radius, Func f, int level = 0);
+    int visit_diamond(const Shape & center, int radius, 
+        const std::function <bool (const Shape &)>& f, int level = 0);
     
-    template <typename Func>
     int visit_diamond_2(const Shape & center,
-                         int radius1, int radius2, Func f, int level = 0);
-    
+                         int radius1, int radius2, 
+                         const std::function <bool (const Shape &)>& f, int level = 0);
+
     const Shape x;
     PT low, high;
     int count;
