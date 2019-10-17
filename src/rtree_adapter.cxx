@@ -22,7 +22,7 @@ void RTree::add(const Shape &shape) {
     tree.Insert(v1, v2, id);
 }
 
-int RTree::visit_diamond(const Shape & center, int radius, 
+int RTree::visit_diamond(const Shape & center, unsigned radius, 
     const std::function <bool (const Shape &)>& f
     ) const {
     auto p = to_rect(center);    
@@ -80,7 +80,7 @@ std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) cons
 }
 
 
-std::vector<Shape> RTree::collect_diamond(const Shape & u, int radius) const {
+std::vector<Shape> RTree::collect_diamond(const Shape & u, unsigned radius) const {
     std::vector<Shape> res;
     visit_diamond(u, radius, [&res](const Shape & v) {
         res.push_back(v);
@@ -89,7 +89,7 @@ std::vector<Shape> RTree::collect_diamond(const Shape & u, int radius) const {
     return res; 
 
 }
-std::vector<Shape> RTree::collect_diamond_2(const Shape & u, int radius1, int radius2) const {
+std::vector<Shape> RTree::collect_diamond_2(const Shape & u, unsigned radius1, unsigned radius2) const {
    std::vector<Shape> res;
     visit_diamond(u, radius2, [radius1, &u,&res](const Shape & v) {
         if(radius1==0  || distance(u, v) > radius1) {

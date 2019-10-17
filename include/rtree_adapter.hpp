@@ -25,14 +25,14 @@ public:
     bool hits(const PT l, const PT r) const;
     std::vector<Shape> collect(const PT l, const PT r) const;
     std::vector<Shape> neighboors_diamond(const Shape &u, size_t number) const;
-    std::vector<Shape> collect_diamond(const Shape & center, int radius) const;
-    std::vector<Shape> collect_diamond_2(const Shape & center, int radius1, int radius2) const;
+    std::vector<Shape> collect_diamond(const Shape & center, unsigned radius) const;
+    std::vector<Shape> collect_diamond_2(const Shape & center, unsigned radius1, unsigned radius2) const;
   
 
     int visit(const Shape & center, 
         const std::function <bool (const Shape &)>& f) const ;
 
-    int visit_diamond(const Shape & center, int radius, 
+    int visit_diamond(const Shape & center, unsigned radius, 
         const std::function <bool (const Shape &)>& f) const;
     
     

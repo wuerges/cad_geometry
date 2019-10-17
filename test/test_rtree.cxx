@@ -40,8 +40,6 @@ void test_rtree_collect_diamond(const Shape &center, const vector<Shape> &shapes
     RTree rtree;
     rtree.populate(shapes);
 
-    // radius = std::min(radius, 10000u);
-
     auto res = rtree.collect_diamond(center, radius);  
 
   

@@ -96,7 +96,7 @@ public:
   int Search(const ELEMTYPE a_min[NUMDIMS], const ELEMTYPE a_max[NUMDIMS], std::function<bool (const DATATYPE&)> callback) const;
   int SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                       const ELEMTYPE a_max[NUMDIMS], 
-                      const int radius,
+                      const unsigned radius,
                       std::function<bool (const DATATYPE&)> callback) const;
 
   
@@ -361,7 +361,7 @@ protected:
   void FreeListNode(ListNode* a_listNode);
   public:
   bool Overlap(Rect* a_rectA, Rect* a_rectB) const;
-  bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const;
+  bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, unsigned radius) const;
   int dist(int a, int b, int aw, int bw) const ;
   int distance(Rect* a_rectA, Rect* a_rectB) const;
   protected:
@@ -577,7 +577,7 @@ int RTREE_QUAL::Search(const ELEMTYPE a_min[NUMDIMS],
 RTREE_TEMPLATE
 int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                        const ELEMTYPE a_max[NUMDIMS], 
-                       const int radius,
+                       const unsigned radius,
                        std::function<bool (const DATATYPE&)> callback) const
 {
 #ifdef _DEBUG
@@ -1670,7 +1670,7 @@ int RTREE_QUAL::distance(Rect* a_rectA, Rect* a_rectB) const {
 
 // Decide whether two rectangles overlap.
 RTREE_TEMPLATE
-bool RTREE_QUAL::OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const
+bool RTREE_QUAL::OverlapDiamond(Rect* a_rectA, Rect* a_rectB, unsigned radius) const
 {
   ASSERT(a_rectA && a_rectB);
   return distance(a_rectA, a_rectB) <= radius;
@@ -1754,7 +1754,7 @@ bool RTREE_QUAL::SearchDiamond(
     {
       if(OverlapDiamond(a_rect, &a_node->m_branch[index].m_rect, radius))
       {
-        if(!Search(a_node->m_branch[index].m_child, a_rect, a_foundCount, callback))
+        if(!SearchDiamond(a_node->m_branch[index].m_child, a_rect, a_foundCount, radius, callback))
         {
           // The callback indicated to stop searching
           return false;
