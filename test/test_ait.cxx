@@ -1,6 +1,6 @@
 #include <rapidcheck.h>
 
-#include <treap.hpp>
+#include <ait.hpp>
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -13,7 +13,7 @@
 using namespace std;
 using namespace geometry;
 
-void test_treap(const vector<Shape> &shapes) {
+void test_ait(const vector<Shape> &shapes) {
   if (shapes.size() == 0)
     return;
   unique_ptr<Node> root(new Node(shapes[0]));
@@ -38,7 +38,7 @@ void test_treap(const vector<Shape> &shapes) {
   }
 }
 
-int test_treap_collect(const vector<Shape> &shapes) {
+int test_ait_collect(const vector<Shape> &shapes) {
   if (shapes.size() == 0)
     return 0;
   unique_ptr<Node> root(new Node(shapes[0]));
@@ -60,14 +60,14 @@ int test_treap_collect(const vector<Shape> &shapes) {
   return 0;
 }
 
-void test_treap_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
+void test_ait_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
 
-    Treap treap;
-    treap.populate(shapes);
+    AIT ait;
+    ait.populate(shapes);
 
     radius = std::min(radius, 10000u);
 
-    auto res = treap.collect_diamond(center, radius);  
+    auto res = ait.collect_diamond(center, radius);  
 
   
     set<Shape> shapeset;
@@ -93,7 +93,7 @@ void test_treap_collect_diamond(const Shape &center, const vector<Shape> &shapes
 
 }
 
-int test_treap_collect_neg(const vector<Shape> &shapes) {
+int test_ait_collect_neg(const vector<Shape> &shapes) {
   if (shapes.size() == 0) {
     RC_DISCARD("discarding empty testcase");
     return 0;
@@ -149,17 +149,17 @@ int test_treap_collect_neg(const vector<Shape> &shapes) {
 int main(int n, char **argv) {
 
   rc::check("Check that added shapes can be queried",
-            [](const std::vector<Shape> &shapes) { test_treap(shapes); });
+            [](const std::vector<Shape> &shapes) { test_ait(shapes); });
 
   rc::check(
       "Check that collected shapes are colliding with the query",
-      [](const std::vector<Shape> &shapes) { test_treap_collect(shapes); });
+      [](const std::vector<Shape> &shapes) { test_ait_collect(shapes); });
 
   rc::check(
       "Check that shapes that were not collected do not collide with the query",
-      [](const std::vector<Shape> &shapes) { test_treap_collect_neg(shapes); });
+      [](const std::vector<Shape> &shapes) { test_ait_collect_neg(shapes); });
 
-  rc::check("Check treap_collect_diamond.", test_treap_collect_diamond);
+  rc::check("Check ait_collect_diamond.", test_ait_collect_diamond);
 
   // vector<Shape> shapes;
   //
@@ -168,7 +168,7 @@ int main(int n, char **argv) {
   // shapes.push_back(Shape{PT{10, 10, 0}, PT{40, 40, 0}});
   // shapes.push_back(Shape{PT{0, 0, 0}, PT{20, 20, 0}});
   // shapes.push_back(Shape{PT{10, 10, 0}, PT{50, 50, 0}});
-  // test_treap(shapes);
+  // test_ait(shapes);
 
   return 0;
 }
