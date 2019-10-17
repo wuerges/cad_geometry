@@ -359,10 +359,10 @@ protected:
   bool RemoveRectRec(Rect* a_rect, const DATATYPE& a_id, Node* a_node, ListNode** a_listNode);
   ListNode* AllocListNode();
   void FreeListNode(ListNode* a_listNode);
+  public:
   bool Overlap(Rect* a_rectA, Rect* a_rectB) const;
   bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const;
   int dist(int a, int b, int aw, int bw) const ;
-  public:
   int distance(Rect* a_rectA, Rect* a_rectB) const;
   protected:
   void ReInsert(Node* a_node, ListNode** a_listNode);
