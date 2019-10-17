@@ -13,12 +13,12 @@ using std::vector;
 
 
 class RTree {
-    using MyTree = rtree::RTree<int, int, 3, double>;
 
-    MyTree tree;
     vector<Shape> shapes;
 
 public:
+    using MyTree = rtree::RTree<int, int, 3, double>;
+    MyTree tree;
     void populate(const std::vector<Shape> &param);
     void add(const Shape &shape);
 

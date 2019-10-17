@@ -278,14 +278,15 @@ public:
   /// Get object at iterator position
   DATATYPE& GetAt(Iterator& a_it)                 { return *a_it; }
 
-protected:
 
+public:
   /// Minimal bounding rectangle (n-dimensional)
   struct Rect
   {
     ELEMTYPE m_min[NUMDIMS];                      ///< Min dimensions of bounding box 
     ELEMTYPE m_max[NUMDIMS];                      ///< Max dimensions of bounding box 
   };
+protected:
 
   /// May be data or may be another subtree
   /// The parents level determines this.
@@ -361,7 +362,9 @@ protected:
   bool Overlap(Rect* a_rectA, Rect* a_rectB) const;
   bool OverlapDiamond(Rect* a_rectA, Rect* a_rectB, int radius) const;
   int dist(int a, int b, int aw, int bw) const ;
+  public:
   int distance(Rect* a_rectA, Rect* a_rectB) const;
+  protected:
   void ReInsert(Node* a_node, ListNode** a_listNode);
   bool Search(Node* a_node, Rect* a_rect, int& a_foundCount, std::function<bool (const DATATYPE&)> callback) const;
   void RemoveAllRec(Node* a_node);

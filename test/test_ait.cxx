@@ -65,7 +65,7 @@ void test_ait_collect_diamond(const Shape &center, const vector<Shape> &shapes, 
     AIT ait;
     ait.populate(shapes);
 
-    radius = std::min(radius, 10000u);
+    // radius = std::min(radius, 10000u);
 
     auto res = ait.collect_diamond(center, radius);  
 
