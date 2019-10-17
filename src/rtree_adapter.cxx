@@ -22,16 +22,17 @@ void RTree::add(const Shape &shape) {
     tree.Insert(v1, v2, id);
 }
 
-template<typename Func >
-int RTree::visit_diamond(const Shape & center, int radius, Func f) const {
+int RTree::visit_diamond(const Shape & center, int radius, 
+    const std::function <bool (const Shape &)>& f
+    ) const {
     int v1[3], v2[3];
     to_intv(center.a, v1);
     to_intv(center.b, v2);        
-    return tree.SearchDiamond(v1, v2, radius, [&f,this](int i) { return f(shapes[i]); });
+    return tree.SearchDiamond(v1, v2, radius, [&f,this](int i)->bool { return f(shapes[i]); });
 }
 
-template<typename Func >
-int RTree::visit(const Shape & center, Func f) const {
+int RTree::visit(const Shape & center, 
+    const std::function <bool (const Shape &)>& f) const {
     int v1[3], v2[3];
     to_intv(center.a, v1);
     to_intv(center.b, v2);        

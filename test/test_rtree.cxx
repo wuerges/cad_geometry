@@ -11,7 +11,7 @@ int main () {
 
     tree.add(s1);
 
-    tree.visit_diamond(s1, 100, [](const Shape & s){ cout << "visited " << s << '\n'; return true; });
+    int res = tree.visit_diamond(s1, 100, [](const Shape & s)->bool{ cout << "visited " << s << '\n'; return true; });
 
     return 0;
 

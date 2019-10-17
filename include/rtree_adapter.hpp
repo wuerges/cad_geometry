@@ -29,10 +29,12 @@ public:
     std::vector<Shape> collect_diamond_2(const Shape & center, int radius1, int radius2) const;
   
 
-    template<typename Func >
-    int visit(const Shape & center, Func f) const ;
-    template<typename Func >
-    int visit_diamond(const Shape & center, int radius, Func f) const;
+    int visit(const Shape & center, 
+        const std::function <bool (const Shape &)>& f) const ;
+
+    int visit_diamond(const Shape & center, int radius, 
+        const std::function <bool (const Shape &)>& f) const;
+    
     
 };
 

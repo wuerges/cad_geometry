@@ -9,7 +9,7 @@ add_library(cadgeometry
   )
 include_directories(include)
 
-IF(EXISTS "ext-libs/rapidcheck/CMakeLists.txt")
+IF(EXISTS "${PROJECT_SOURCE_DIR}/ext-libs/rapidcheck/CMakeLists.txt")
   add_subdirectory("ext-libs/rapidcheck")
   add_subdirectory(test)
 ENDIF()
