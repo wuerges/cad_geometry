@@ -240,7 +240,8 @@ int Node::visit_diamond_2(const Shape & center,
         return 0;
     }
 
-    if( diamond_contains(center,radius1-1, low, high) ) return 0;
+    if(radius1 > 0 && diamond_contains(center,radius1-1, low, high) ) return 0;
+    // bool hits1 = radius1 == 0 || !diamond_collides(center, radius1, x.a, x.b);
     bool hits1 = radius1 > 0 && diamond_collides(center, radius1, x.a, x.b);
     bool hits = diamond_collides(center, radius2, x.a, x.b);
 

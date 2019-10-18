@@ -1872,7 +1872,8 @@ bool RTREE_QUAL::SearchDiamond(
     // This is an internal node in the tree
     for(int index=0; index < a_node->m_count; ++index)
     {
-      if(!ContainsDiamond(a_rect, &a_node->m_branch[index].m_rect, radius1) && OverlapDiamond(a_rect, &a_node->m_branch[index].m_rect, radius2))
+        bool contains = radius1 > 0 && ContainsDiamond(a_rect, &a_node->m_branch[index].m_rect, radius1-1);
+      if(!contains && OverlapDiamond(a_rect, &a_node->m_branch[index].m_rect, radius2))
       {
         if(!SearchDiamond(a_node->m_branch[index].m_child, a_rect, a_foundCount, radius1, radius2, callback))
         {

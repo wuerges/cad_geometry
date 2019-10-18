@@ -33,6 +33,8 @@ using namespace geometry;
 
 void test_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
 
+    RC_LOG() << "radius=" << radius << '\n';
+    
     AIT ait;
     RTree rtree;
     auto start1 = std::chrono::steady_clock::now();
@@ -76,6 +78,8 @@ void test_collect_diamond_2(const Shape &center, const vector<Shape> &shapes, un
 
     unsigned radius1 = min(rad1, rad2);
     unsigned radius2 = max(rad1+1, rad2+1);
+
+    RC_LOG() << "radius1=" << radius1 << " radius2=" << radius2 << '\n';
     
     AIT ait;
     RTree rtree;
