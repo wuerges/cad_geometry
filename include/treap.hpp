@@ -5,6 +5,6 @@
 
 namespace geometry {
 
-using Treap = AIT;
+using Treap = RTree;
 
 } // namespace geometry
