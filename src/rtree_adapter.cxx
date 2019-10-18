@@ -67,19 +67,21 @@ std::vector<Shape> RTree::collect(const PT l, const PT r) const {
 
 std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) const {
 
-  std::vector<Shape> res;
+    std::vector<Shape> res;
 
-  int a = 0, b = 1;
-  const int MAXB = 1e8;
-  while (res.size() < number && b < MAXB) {
-    visit_diamond_2(u, a, b, [&res](const Shape & v) {
-      res.push_back(v);
-      return true;
-    });
-    a = b;
-    b = b*2;
-  }
-  return res;
+    int a = 0, b = 1;
+    const int MAXB = 1e8;
+    while (res.size() < number && b < MAXB) {
+        visit_diamond_2(u, a, b, [&res](const Shape & v) {
+            // if(collides(u, v)) {
+            res.push_back(v);
+            // }
+            return true;
+        });
+        a = b;
+        b = b*2;
+    }
+    return res;
 }
 
 

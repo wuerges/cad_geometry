@@ -41,7 +41,7 @@ void Node::add(const Shape &shape, int level) {
 }
 
 
-int Node::query_sphere(const PT center, int radius, int level) {
+int Node::query_sphere(const PT center, unsigned radius, int level) {
   // std::cout << "query_sphere("<<center<<","<<radius<<","<<level<<")\n";
 
   // Passes for 100.000 tests
@@ -67,7 +67,7 @@ int Node::query_sphere(const PT center, int radius, int level) {
          (right ? right->query_sphere(center, radius, level + 1) : 0);
 }
 
-int Node::query_diamond(const Shape & center, int radius, int level) {
+int Node::query_diamond(const Shape & center, unsigned radius, int level) {
   // std::cout << "query_sphere("<<center<<","<<radius<<","<<level<<")\n";
 
   // Passes for 100.000 tests
@@ -155,7 +155,7 @@ int Node::collect(std::vector<Shape> &results, const PT l, const PT r,
 }
 
 int Node::collect_sphere(std::vector<Shape> &results, const PT center,
-                         int radius, int level) {
+                         unsigned radius, int level) {
   if (  ((center[level % 3] - radius) > high[level % 3])
      || ((center[level % 3] + radius) < low[level % 3])   ) {
     return 0;
@@ -183,7 +183,7 @@ int Node::collect_sphere(std::vector<Shape> &results, const PT center,
 }
 
 int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
-                         int radius, int level) {
+                         unsigned radius, int level) {
 
     return visit_diamond(
         center, 
@@ -197,7 +197,7 @@ int Node::collect_diamond(std::vector<Shape> &results, const Shape & center,
 
 // Visits every shape that is close to the center shape, given a radius.
     // For each visited shape, apply f. If f returns false, stops the visit.
-int Node::visit_diamond(const Shape & center, int radius, 
+int Node::visit_diamond(const Shape & center, unsigned radius, 
   const std::function <bool (const Shape &)>& f, int level) {
     if (  ((center.a[level % 3] - radius) > high[level % 3])
         || ((center.b[level % 3] + radius) < low[level % 3]) ) {
@@ -219,7 +219,7 @@ int Node::visit_diamond(const Shape & center, int radius,
 }
 
 int Node::collect_diamond_2(std::vector<Shape> &results, const Shape & center,
-                         int radius1, int radius2, int level) {
+                         unsigned radius1, unsigned radius2, int level) {
     return visit_diamond_2(
         center, 
         radius1, 
@@ -232,7 +232,7 @@ int Node::collect_diamond_2(std::vector<Shape> &results, const Shape & center,
 }
 
 int Node::visit_diamond_2(const Shape & center,
-                         int radius1, int radius2, 
+                         unsigned radius1, unsigned radius2, 
                          const std::function <bool (const Shape &)>& f, int level) {
     if (  ((center.a[level % 3] - radius2) > high[level % 3])
         || ((center.b[level % 3] + radius2) < low[level % 3])   
@@ -336,14 +336,14 @@ std::vector<Shape> AIT::neighboors_diamond(const Shape &u, size_t number) const 
   //   return 0;
   // }
 
-  // int AIT::query(const PT center, int radius) const {
+  // int AIT::query(const PT center, unsigned radius) const {
   //   if (root) {
   //     return root->query_sphere(center, radius);
   //   }
   //   return 0;
   // }
 
-  int AIT::query_diamond(const Shape & center, int radius) const {
+  int AIT::query_diamond(const Shape & center, unsigned radius) const {
     if (root) {
       return root->query_diamond(center, radius);
     }
@@ -367,7 +367,7 @@ std::vector<Shape> AIT::neighboors_diamond(const Shape &u, size_t number) const 
     return results;
   }
 
-  std::vector<Shape> AIT::collect(const PT center, int radius) const {
+  std::vector<Shape> AIT::collect(const PT center, unsigned radius) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -376,7 +376,7 @@ std::vector<Shape> AIT::neighboors_diamond(const Shape &u, size_t number) const 
     return results;
   }
 
-  std::vector<Shape> AIT::collect_diamond(const Shape & center, int radius) const {
+  std::vector<Shape> AIT::collect_diamond(const Shape & center, unsigned radius) const {
 
     std::vector<Shape> results;
     if (root) {
@@ -385,7 +385,7 @@ std::vector<Shape> AIT::neighboors_diamond(const Shape &u, size_t number) const 
     return results;
   }
 
-  std::vector<Shape> AIT::collect_diamond_2(const Shape & center, int radius1, int radius2) const {
+  std::vector<Shape> AIT::collect_diamond_2(const Shape & center, unsigned radius1, unsigned radius2) const {
 
     std::vector<Shape> results;
     if (root) {
