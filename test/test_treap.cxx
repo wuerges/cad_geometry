@@ -31,7 +31,9 @@ using namespace std;
 using namespace geometry;
 
 
-void test_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
+void test_collect_diamond(const Shape &center, vector<Shape> shapes, unsigned radius) {
+    sort(shapes.begin(), shapes.end());
+    shapes.erase(unique(shapes.begin(), shapes.end()), shapes.end());
 
     RC_LOG() << "radius=" << radius << '\n';
     
