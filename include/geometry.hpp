@@ -179,13 +179,13 @@ const int distance(const PT<NDIM> & pt, const Shape<NDIM> & s1) {
 }
 
 template< int NDIM >
-const bool diamond_collides(const Shape<NDIM> & center, int radius32, const PT<NDIM> low,
+const bool diamond_collides(const Shape<NDIM> & center, unsigned radius32, const PT<NDIM> low,
                 const PT<NDIM> high) {
     return distance(center, Shape{low, high}) <= radius32;
 }
 
 template< int NDIM >
-const bool diamond_contains(const Shape<NDIM> & center, int radius32, const PT<NDIM> low,
+const bool diamond_contains(const Shape<NDIM> & center, unsigned radius32, const PT<NDIM> low,
                 const PT<NDIM> high);
 
 
@@ -193,7 +193,7 @@ const bool diamond_contains(const Shape<NDIM> & center, int radius32, const PT<N
  * Assumes that low[2] == low[3]
  */
 template<>
-const bool diamond_contains(const Shape<3> & center, int radius32, const PT<3> low,
+const bool diamond_contains(const Shape<3> & center, unsigned radius32, const PT<3> low,
                 const PT<3> high)             
                  {
 
@@ -207,7 +207,7 @@ const bool diamond_contains(const Shape<3> & center, int radius32, const PT<3> l
 
 
 template<>
-const bool diamond_contains(const Shape<2> & center, int radius32, const PT<2> low,
+const bool diamond_contains(const Shape<2> & center, unsigned radius32, const PT<2> low,
                 const PT<2> high)             
                  {
 
