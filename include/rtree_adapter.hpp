@@ -76,14 +76,12 @@ public:
     }
     std::vector<Shapei> collect(const PTi l, const PTi r) const {
         std::vector<Shapei> res;
-        std::set<Shapei> temp;
         
         const Shapei center{l,r};
-        visit(center, [&temp](const Shapei & x) {
-            temp.insert(x);
+        visit(center, [&res](const Shapei & x) {
+            res.push_back(x);
             return true;
         });
-        for(auto & x : temp) { res.push_back(x); }
         return res;
     }
 
