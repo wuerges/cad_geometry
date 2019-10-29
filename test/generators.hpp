@@ -13,8 +13,8 @@ namespace rc {
 
   const auto genPT = gen::container<array<int, 3>>(gen::inRange(0, 100000));
 
-  template<>
-  struct Arbitrary<PT> {
+  template<int NDIM>
+  struct Arbitrary<PT<NDIM>> {
     static Gen<PT> arbitrary() {
       return gen::map(genPT,
         [](array<int, 3> vs) {
@@ -23,8 +23,8 @@ namespace rc {
     }
   };
 
-  template<>
-  struct Arbitrary<Shape> {
+  template<int NDIM>
+  struct Arbitrary<Shape<NDIM>> {
     static Gen<Shape> arbitrary() {
       return gen::map(gen::container<array<PT, 2>>(gen::arbitrary<PT>()),
         [](const array<PT, 2> pts) {
