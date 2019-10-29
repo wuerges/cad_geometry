@@ -9,7 +9,8 @@ using namespace std;
 using namespace geometry;
 
 
-void test_distance(const Shape & s1, const Shape & s2) {
+template<int NDIM>
+void test_distance(const Shape<NDIM> & s1, const Shape<NDIM> & s2) {
     RC_LOG() << "distance is " << distance(s1, s2) << '\n';
     RC_LOG() << "collides? " << collides(s1, s2) << '\n';
     
@@ -24,11 +25,11 @@ int main(int argc, char ** argv) {
     // PT b(20, 20, 0);
     // PT c(30, 30, 0);
     // PT d(15, 15, 0);
-    PT e(0, 0, 0);
-    PT f(0, 0, 1);
+    // PT e(0, 0, 0);
+    // PT f(0, 0, 1);
 
-    Shape a(e,e);
-    cout <<"distance " << distance(a, a) << '\n';
+    // Shape a(e,e);
+    // cout <<"distance " << distance(a, a) << '\n';
 
     
     // cout << "Distance " << distance(c, Shape(a, b)) << '\n';
