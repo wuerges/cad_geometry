@@ -96,7 +96,7 @@ class Shape {
     
     public:
 
-    PTi a, b;
+    const PTi a, b;
 
     Shape(const PTi _a, const PTi _b): a(min(_a,_b)), b(max(_a,_b)) {}
     Shape() {}

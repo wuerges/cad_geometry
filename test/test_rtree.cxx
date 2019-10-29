@@ -36,6 +36,31 @@ void test_rtree_distance(const Shape<NDIM> &a, const Shape<NDIM> &b) {
     RC_ASSERT(distance(a, b) == rtree.tree.distance(&ra, &rb));
 }
 
+template<int NDIM>
+void test_rtree_overlap(const Shape<NDIM> &a, const Shape<NDIM> &b) {
+
+    RTree<NDIM> rtree;
+
+    typename RTree<NDIM>::MyTree::Rect ra = to_rect<>(a), rb = to_rect<>(b);
+    
+    RC_LOG() << "Overlap = " << rtree.tree.Overlap(&ra, &rb) <<"\n";
+    
+    RC_ASSERT((distance(a, b) == 0) == rtree.tree.Overlap(&ra, &rb));
+}
+
+
+template<int NDIM>
+void test_rtree_overlap_diamond(const Shape<NDIM> &a, const Shape<NDIM> &b, unsigned radius) {
+
+    RTree<NDIM> rtree;
+
+    typename RTree<NDIM>::MyTree::Rect ra = to_rect<>(a), rb = to_rect<>(b);
+    
+    RC_LOG() << "Overlap = " << rtree.tree.Overlap(&ra, &rb) <<"\n";
+    
+    RC_ASSERT((distance(a, b) <= radius) == rtree.tree.OverlapDiamond(&ra, &rb, radius));
+}
+
 template <int NDIM>
 void test_rtree_collect_diamond(const Shape<NDIM> &center, const vector<Shape<NDIM>> &shapes, unsigned radius) {
 
@@ -81,6 +106,10 @@ void test_rtree_collect_diamond(const Shape<NDIM> &center, const vector<Shape<ND
 int main () {
 
     rc::check("Test RTree.h distance 2D.", test_rtree_distance<2>);
+    
+    rc::check("Test RTree.h overlap 2D.", test_rtree_overlap<2>);
+
+    rc::check("Test RTree.h overlap diamond 2D.", test_rtree_overlap_diamond<2>);
 
     rc::check("Check rtree_collect_diamond 2D.", test_rtree_collect_diamond<2> );
     

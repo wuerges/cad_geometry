@@ -19,6 +19,14 @@ void test_distance(const Shape<NDIM> & s1, const Shape<NDIM> & s2) {
     }    
 }
 
+
+template<int NDIM>
+void test_distance_comutative(const Shape<NDIM> & s1, const Shape<NDIM> & s2) {
+    RC_LOG() << "distance is " << distance(s1, s2) << '\n';
+    
+    RC_ASSERT(distance(s1, s2) == distance(s2, s1));
+}
+
 int main(int argc, char ** argv) {
 
     // PT a(10, 10, 0);
@@ -55,8 +63,8 @@ int main(int argc, char ** argv) {
     // cout << "Expand " << Shape(a, b) << " by 3 = " << Shape(a, b).expand(3) << "\n";
 
 
-    rc::check("Check that if shapes collide, their distance is 0",
-    test_distance<3>);
+    rc::check("Check that if shapes collide, their distance is 0", test_distance<3>);
+    rc::check("Check that distance is commutative", test_distance_comutative<3>);
 
     return 0;
 }

@@ -32,7 +32,7 @@ public:
         int id = shapes.size();
         shapes.push_back(shape);
         
-        int v1[3], v2[3];
+        int v1[NDIM], v2[NDIM];
         to_intv(shape.a, v1);
         to_intv(shape.b, v2);
         
@@ -136,7 +136,7 @@ void to_intv(const PT<NDIM> & p, int* v) {
 template <int NDIM>
 typename RTree<NDIM>::MyTree::Rect to_rect(const Shape<NDIM> & s) {
     typename RTree<NDIM>::MyTree::Rect r;
-    to_intv(s.a, r.m_min);    
+    to_intv(s.a, r.m_min);
     to_intv(s.b, r.m_max);
     return r;
 }
