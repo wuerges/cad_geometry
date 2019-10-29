@@ -56,7 +56,7 @@ int main(int argc, char ** argv) {
 
 
     rc::check("Check that if shapes collide, their distance is 0",
-    test_distance);
+    test_distance<3>);
 
     return 0;
 }

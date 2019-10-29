@@ -22,28 +22,30 @@ using namespace std;
 //     return r;
 // }
 
-void test_rtree_distance(const Shape &a, const Shape &b) {
+template<int NDIM>
+void test_rtree_distance(const Shape<NDIM> &a, const Shape<NDIM> &b) {
 
-    RTree rtree;
+    RTree<NDIM> rtree;
 
-    RTree::MyTree::Rect ra = to_rect(a), rb = to_rect(b);
+    typename RTree<NDIM>::MyTree::Rect ra = to_rect<>(a), rb = to_rect<>(b);
     
-    RC_LOG() << "RA={a=" << ra.m_min[0] << ' ' << ra.m_min[1] << ' '  << ra.m_min[2] << "}{b=" << ra.m_max[0] << ' ' << ra.m_max[1] << ' '  << ra.m_max[2] << "}\n";
+    // RC_LOG() << "RA={a=" << ra.m_min[0] << ' ' << ra.m_min[1] << ' '  << ra.m_min[2] << "}{b=" << ra.m_max[0] << ' ' << ra.m_max[1] << ' '  << ra.m_max[2] << "}\n";
     
-    RC_LOG() << "RB={a=" << rb.m_min[0] << ' ' << rb.m_min[1] << ' '  << rb.m_min[2] << "}{b=" << rb.m_max[0] << ' ' << rb.m_max[1] << ' '  << rb.m_max[2] << "}\n";
+    // RC_LOG() << "RB={a=" << rb.m_min[0] << ' ' << rb.m_min[1] << ' '  << rb.m_min[2] << "}{b=" << rb.m_max[0] << ' ' << rb.m_max[1] << ' '  << rb.m_max[2] << "}\n";
     
     RC_ASSERT(distance(a, b) == rtree.tree.distance(&ra, &rb));
 }
 
-void test_rtree_collect_diamond(const Shape &center, const vector<Shape> &shapes, unsigned radius) {
+template <int NDIM>
+void test_rtree_collect_diamond(const Shape<NDIM> &center, const vector<Shape<NDIM>> &shapes, unsigned radius) {
 
-    RTree rtree;
+    RTree<NDIM> rtree;
     rtree.populate(shapes);
 
     auto res = rtree.collect_diamond(center, radius);  
 
   
-    set<Shape> shapeset;
+    set<Shape<NDIM>> shapeset;
     shapeset.insert(res.begin(), res.end());
 
     // for (const Shape &s : shapes) {
@@ -55,7 +57,7 @@ void test_rtree_collect_diamond(const Shape &center, const vector<Shape> &shapes
     // }
     
 
-    for (const Shape &s : shapes) {
+    for (const auto & s : shapes) {
         auto rc = to_rect(center), rs = to_rect(s);
         RC_LOG() << "\n-------- error ----------\n";
         RC_LOG() << "center=" << center << "\n";
@@ -78,9 +80,13 @@ void test_rtree_collect_diamond(const Shape &center, const vector<Shape> &shapes
 
 int main () {
 
-    rc::check("Test RTree.h distance.", test_rtree_distance);
+    rc::check("Test RTree.h distance 2D.", test_rtree_distance<2>);
 
-    rc::check("Check rtree_collect_diamond.", test_rtree_collect_diamond);
+    rc::check("Check rtree_collect_diamond 2D.", test_rtree_collect_diamond<2> );
+    
+    // rc::check("Test RTree.h distance.", test_rtree_distance<3>);
+
+    // rc::check("Check rtree_collect_diamond.", test_rtree_collect_diamond<3> );
     
 
     return 0;

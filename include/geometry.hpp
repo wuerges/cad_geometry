@@ -27,16 +27,16 @@ struct PT {
     PT(array<int, NDIM> p): coord(p) {}
     PT() {}
 
-    const array<int, NDIM> coord;
+    array<int, NDIM> coord;
 
     int operator[](int i) const {
         return coord[i];
     };   
 
-    ostream & operator<<(ostream & out) {
+    friend ostream & operator<<(ostream & out, const PT & pt) {
         out << "PT{";
         for(int i = 0; i < NDIM; ++i) {
-            out << (i==0?"":", ") << coord[i];
+            out << (i==0?"":", ") << pt[i];
         }
         out << "}";
         return out;
@@ -56,6 +56,7 @@ const bool operator==(const PT<NDIM> & a, const PT<NDIM> & b) {
 
 template<int NDIM>
 const PT<NDIM> min(const PT<NDIM> & a, const PT<NDIM> & b) {
+    using std::min;
     array<int, NDIM> res;
     for(int i = 0; i < NDIM; ++i) {
         res[i] = min(a[i], b[i]);
@@ -65,6 +66,7 @@ const PT<NDIM> min(const PT<NDIM> & a, const PT<NDIM> & b) {
 
 template<int NDIM>
 const PT<NDIM> max(const PT<NDIM> & a, const PT<NDIM> & b) {
+    using std::max;
     array<int, NDIM> res;
     for(int i = 0; i < NDIM; ++i) {
         res[i] = max(a[i], b[i]);
@@ -74,6 +76,7 @@ const PT<NDIM> max(const PT<NDIM> & a, const PT<NDIM> & b) {
 
 template<int NDIM>
 const int manhatan(const PT<NDIM> & a, const PT<NDIM> & b) {
+    using std::abs;
     int res = 0;
     for(int i = 0; i < NDIM; ++i) {
         res += abs(a.coord[i] - b.coord[i]);
@@ -98,8 +101,8 @@ class Shape {
     Shape(const PTi _a, const PTi _b): a(min(_a,_b)), b(max(_a,_b)) {}
     Shape() {}
 
-    ostream & operator<<(ostream &out) {
-        out << "Shape{"<<a<<", "<<b<<"}";
+    friend ostream & operator<<(ostream &out, const Shape & s) {
+        out << "Shape{"<<s.a<<", "<<s.b<<"}";
         // out << "Polygon(";
         // out << "(" << a.x << "," << a.y << "),";
         // out << "(" << b.x << "," << a.y << "),";

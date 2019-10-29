@@ -26,8 +26,8 @@ struct Arbitrary<PT<NDIM>> {
 template<int NDIM>
 struct Arbitrary<Shape<NDIM> > {
     static Gen<Shape<NDIM> > arbitrary() {
-    return gen::map(gen::container<array<PT<3>, 2> >(gen::arbitrary<PT<3>>()),
-        [](const array<PT<3>, 2> pts) {
+    return gen::map(gen::container<array<PT<NDIM>, 2> >(gen::arbitrary<PT<NDIM>>()),
+        [](const array<PT<NDIM>, 2> pts) {
             return Shape<NDIM>(pts[0], pts[1]);
         });
     }

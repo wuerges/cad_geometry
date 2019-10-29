@@ -128,15 +128,18 @@ public:
 
 template <int NDIM>
 void to_intv(const PT<NDIM> & p, int* v) {
-    return p.coord;
+    for(int i = 0; i < NDIM; ++i) {
+        v[i] = p[i];
+    }
 }
 
-// RTree::MyTree::Rect to_rect(const Shape & s) {
-//     RTree::MyTree::Rect r;
-//     to_intv(s.a, r.m_min);    
-//     to_intv(s.b, r.m_max);
-//     return r;
-// }
+template <int NDIM>
+typename RTree<NDIM>::MyTree::Rect to_rect(const Shape<NDIM> & s) {
+    typename RTree<NDIM>::MyTree::Rect r;
+    to_intv(s.a, r.m_min);    
+    to_intv(s.b, r.m_max);
+    return r;
+}
 
 
 }
