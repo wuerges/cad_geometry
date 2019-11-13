@@ -47,9 +47,9 @@ const bool operator==(const PT & a, const PT & b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
-const bool operator!=(const Shape & a, const Shape & b) {
-    return ! (a == b);
-}
+// const bool operator!=(const Shape & a, const Shape & b) {
+//     return ! (a == b);
+// }
 
 int dist(int a, int b, int aw, int bw) {
     if(a < b) {
@@ -79,17 +79,11 @@ const int distance(const PT & pt, const Shape & s2) {
 }
 
 const bool operator<(const PT & a, const PT & b) {
-    return a.x < b.x && a.y < b.y && a.z < b.z;
+    if(a.x != b.x) return a.x < b.x;
+    if(a.y != b.y) return a.y < b.y;
+    return a.z < b.z;
 }
-const bool operator<=(const PT & a, const PT & b) {
-    return a.x <= b.x && a.y <= b.y && a.z <= b.z;
-}
-const bool operator>(const PT & a, const PT & b) {
-    return b < a;
-}
-const bool operator>=(const PT & a, const PT & b) {
-    return b <= a;
-}
+
 const PT min(const PT & a, const PT & b) {
     using std::min;
     return PT(

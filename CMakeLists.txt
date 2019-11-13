@@ -4,7 +4,6 @@ set (CMAKE_CXX_STANDARD 17)
 
 add_library(cadgeometry
   src/base.cxx  
-  src/ait.cxx
   src/rtree_adapter.cxx
   )
 include_directories(include)
