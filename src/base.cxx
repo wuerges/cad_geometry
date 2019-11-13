@@ -46,10 +46,13 @@ const bool operator==(const Shape & a, const Shape & b) {
 const bool operator==(const PT & a, const PT & b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
+const bool operator!=(const PT & a, const PT & b) {
+    return a.x != b.x || a.y != b.y || a.z != b.z;
+}
 
-// const bool operator!=(const Shape & a, const Shape & b) {
-//     return ! (a == b);
-// }
+const bool operator!=(const Shape & a, const Shape & b) {
+    return a.a != b.a || a.b != b.b;
+}
 
 int dist(int a, int b, int aw, int bw) {
     if(a < b) {
