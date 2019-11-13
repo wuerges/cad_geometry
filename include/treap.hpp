@@ -1,7 +1,6 @@
 #pragma once
 
-// #include <rtree_adapter.hpp>
-#include <ait.hpp>
+#include <rtree_adapter.hpp>
 
 namespace geometry {
 

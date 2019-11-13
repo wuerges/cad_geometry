@@ -15,10 +15,8 @@ namespace geometry {
       friend ostream & operator<<(ostream &out, const PT & p);
 
       friend const bool operator<(const PT & a, const PT & b);
-      friend const bool operator<=(const PT & a, const PT & b);
-      friend const bool operator>(const PT & a, const PT & b);
-      friend const bool operator>=(const PT & a, const PT & b);
       friend const bool operator==(const PT & a, const PT & b);
+      friend const bool operator!=(const PT & a, const PT & b);
       friend const PT min(const PT & a, const PT & b);
       friend const PT max(const PT & a, const PT & b);
 
@@ -39,8 +37,8 @@ namespace geometry {
       friend std::ostream & operator<<(std::ostream & out, const Shape & s);
 
       friend const bool operator<(const Shape & a, const Shape & b);
-      friend const bool operator!=(const Shape & a, const Shape & b);
       friend const bool operator==(const Shape & a, const Shape & b);
+      friend const bool operator!=(const Shape & a, const Shape & b);
 
       friend const int distance(const Shape & a, const Shape & b);
       friend const int distance(const PT & pt, const Shape & s2);
