@@ -20,7 +20,9 @@
 // RTree.h
 //
 
+// #define RTREE_TEMPLATE template<class DATATYPE, class ELEMTYPE, int NUMDIMS, class ELEMTYPEREAL, int TMAXNODES, int TMINNODES>
 #define RTREE_TEMPLATE template<class DATATYPE, class ELEMTYPE, int NUMDIMS, class ELEMTYPEREAL, int TMAXNODES, int TMINNODES>
+#define RTREE_TEMPLATE_FUNC template<class DATATYPE, class ELEMTYPE, int NUMDIMS, class ELEMTYPEREAL, int TMAXNODES, int TMINNODES>
 #define RTREE_QUAL RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>
 
 #define RTREE_DONT_USE_MEMPOOLS // This version does not contain a fixed memory allocator, fill in lines with EXAMPLE to implement one.
@@ -49,7 +51,7 @@ class RTFileStream;  // File I/O helper class, look below for implementation and
 ///        Instead of using a callback function for returned results, I recommend and efficient pre-sized, grow-only memory
 ///        array similar to MFC CArray or STL Vector for returning search query result.
 ///
-template<class DATATYPE, class ELEMTYPE, int NUMDIMS, 
+template<class DATATYPE, class ELEMTYPE, int NUMDIMS,
          class ELEMTYPEREAL = ELEMTYPE, int TMAXNODES = 8, int TMINNODES = TMAXNODES / 2>
 class RTree
 {
@@ -93,16 +95,19 @@ public:
   /// \param a_resultCallback Callback function to return result.  Callback should return 'true' to continue searching
   /// \param a_context User context to pass as parameter to a_resultCallback
   /// \return Returns the number of entries found
-  int Search(const ELEMTYPE a_min[NUMDIMS], const ELEMTYPE a_max[NUMDIMS], const std::function<bool (const DATATYPE&)>& callback) const;
+  template<typename FUNC>
+  int Search(const ELEMTYPE a_min[NUMDIMS], const ELEMTYPE a_max[NUMDIMS], const FUNC& callback) const;
+  template<typename FUNC>
   int SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                       const ELEMTYPE a_max[NUMDIMS], 
                       const unsigned radius,
-                      const std::function<bool (const DATATYPE&)>& callback) const;
+                      const FUNC& callback) const;
+  template<typename FUNC>
   int SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                       const ELEMTYPE a_max[NUMDIMS], 
                       const unsigned radius1,
                       const unsigned radius2,
-                      const std::function<bool (const DATATYPE&)>& callback) const;
+                      const FUNC& callback) const;
 
   
   /// Remove all entries from tree
@@ -372,7 +377,8 @@ protected:
   int distance(Rect* a_rectA, Rect* a_rectB) const;
   protected:
   void ReInsert(Node* a_node, ListNode** a_listNode);
-  bool Search(Node* a_node, Rect* a_rect, int& a_foundCount, const std::function<bool (const DATATYPE&)>& callback) const;
+  template<typename FUNC>
+  bool Search(Node* a_node, Rect* a_rect, int& a_foundCount, const FUNC& callback) const;
   void RemoveAllRec(Node* a_node);
   void Reset();
   void CountRec(Node* a_node, int& a_count);
@@ -380,17 +386,19 @@ protected:
   bool SaveRec(Node* a_node, RTFileStream& a_stream);
   bool LoadRec(Node* a_node, RTFileStream& a_stream);
   void CopyRec(Node* current, Node* other);
+  template<typename FUNC>
   bool SearchDiamond(
     Node* a_node, 
     Rect* a_rect, int& a_foundCount, 
     int radius, 
-    const std::function<bool (const DATATYPE&)>& callback) const;
+    const FUNC& callback) const;
+  template<typename FUNC>
   bool SearchDiamond(
     Node* a_node, 
     Rect* a_rect, int& a_foundCount, 
     int radius1, 
     int radius2, 
-    const std::function<bool (const DATATYPE&)>& callback) const;
+    const FUNC& callback) const;
 
   Node* m_root;                                    ///< Root of tree
   ELEMTYPEREAL m_unitSphereVolume;                 ///< Unit sphere constant for required number of dimensions
@@ -559,9 +567,10 @@ void RTREE_QUAL::Remove(const ELEMTYPE a_min[NUMDIMS], const ELEMTYPE a_max[NUMD
 
 
 RTREE_TEMPLATE
+template<typename FUNC>
 int RTREE_QUAL::Search(const ELEMTYPE a_min[NUMDIMS], 
                        const ELEMTYPE a_max[NUMDIMS], 
-                       const std::function<bool (const DATATYPE&)> & callback) const
+                       const FUNC & callback) const
 {
 #ifdef _DEBUG
   for(int index=0; index<NUMDIMS; ++index)
@@ -587,10 +596,11 @@ int RTREE_QUAL::Search(const ELEMTYPE a_min[NUMDIMS],
 }
 
 RTREE_TEMPLATE
+template<typename FUNC>
 int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                        const ELEMTYPE a_max[NUMDIMS], 
                        const unsigned radius,
-                       const std::function<bool (const DATATYPE&)> & callback) const
+                       const FUNC & callback) const
 {
 #ifdef _DEBUG
   for(int index=0; index<NUMDIMS; ++index)
@@ -616,11 +626,12 @@ int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS],
 }
 
 RTREE_TEMPLATE
+template<typename FUNC>
 int RTREE_QUAL::SearchDiamond(const ELEMTYPE a_min[NUMDIMS], 
                        const ELEMTYPE a_max[NUMDIMS], 
                        const unsigned radius1,
                        const unsigned radius2,
-                       const std::function<bool (const DATATYPE&)> & callback) const
+                       const FUNC & callback) const
 {
 #ifdef _DEBUG
   for(int index=0; index<NUMDIMS; ++index)
@@ -1763,7 +1774,8 @@ void RTREE_QUAL::ReInsert(Node* a_node, ListNode** a_listNode)
 
 // Search in an index tree or subtree for all data retangles that overlap the argument rectangle.
 RTREE_TEMPLATE
-bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, const std::function<bool (const DATATYPE&)> & callback) const
+template<typename FUNC>
+bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, const FUNC & callback) const
 {
   ASSERT(a_node);
   ASSERT(a_node->m_level >= 0);
@@ -1794,7 +1806,7 @@ bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, const std
         DATATYPE& id = a_node->m_branch[index].m_data;
         ++a_foundCount;
 
-          if(callback && !callback(id))
+          if(!callback(id))
           {
             return false; // Don't continue searching
           }
@@ -1807,11 +1819,12 @@ bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, const std
 
 // Search in an index tree or subtree for all data retangles that overlap the argument rectangle.
 RTREE_TEMPLATE
+template<typename FUNC>
 bool RTREE_QUAL::SearchDiamond(
   Node* a_node, 
   Rect* a_rect, int& a_foundCount, 
   int radius, 
-  const std::function<bool (const DATATYPE&)> & callback) const
+  const FUNC & callback) const
 {
   ASSERT(a_node);
   ASSERT(a_node->m_level >= 0);
@@ -1842,7 +1855,7 @@ bool RTREE_QUAL::SearchDiamond(
         DATATYPE& id = a_node->m_branch[index].m_data;
         ++a_foundCount;
 
-          if(callback && !callback(id))
+          if(!callback(id))
           {
             return false; // Don't continue searching
           }
@@ -1856,12 +1869,13 @@ bool RTREE_QUAL::SearchDiamond(
 
 // Search in an index tree or subtree for all data retangles that overlap the argument rectangle.
 RTREE_TEMPLATE
+template<typename FUNC>
 bool RTREE_QUAL::SearchDiamond(
   Node* a_node, 
   Rect* a_rect, int& a_foundCount, 
   int radius1, 
   int radius2, 
-  const std::function<bool (const DATATYPE&)> & callback) const
+  const FUNC & callback) const
 {
   ASSERT(a_node);
   ASSERT(a_node->m_level >= 0);
@@ -1894,7 +1908,7 @@ bool RTREE_QUAL::SearchDiamond(
         DATATYPE& id = a_node->m_branch[index].m_data;
         ++a_foundCount;
 
-          if(callback && !callback(id))
+          if(!callback(id))
           {
             return false; // Don't continue searching
           }
