@@ -9,45 +9,42 @@ namespace geometry {
 std::ostream & operator<<(std::ostream & out, const Shape & s) {
     out << "Shape{"<<s.a<<", "<<s.b<<"}";
     // out << "Polygon(";
-    // out << "(" << s.a.x << "," << s.a.y << "),";
-    // out << "(" << s.b.x << "," << s.a.y << "),";
-    // out << "(" << s.b.x << "," << s.b.y << "),";
-    // out << "(" << s.a.x << "," << s.b.y << ")";
+    // out << "(" << s.a[0] << "," << s.a[1] << "),";
+    // out << "(" << s.b[0] << "," << s.a[1] << "),";
+    // out << "(" << s.b[0] << "," << s.b[1] << "),";
+    // out << "(" << s.a[0] << "," << s.b[1] << ")";
     // out << ")";
     return out;
 }
 std::ostream & operator<<(std::ostream & out, const PT & s) {
-    out << "PT{"<<s.x<<", "<<s.y<<", "<<s.z<<"}";
+    out << "PT{"<<s[0]<<", "<<s[1]<<", "<<s[2]<<"}";
     return out;
 }
 
 
 int PT::operator[](int i) const {
-    if(i==0) return x;
-    if(i==1) return y;
-    if(i==2) return z;
-    assert(0 && "point index out of bounds");
-    return -1;
+    return coords[i]; 
 }
 
 const int manhatan(const PT & a, const PT & b) {
-    return abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z);;
+    return abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2]);
 }
 
 const bool operator<(const Shape & a, const Shape & b) {
-    std::array<int, 6> va = {a.a.x, a.a.y, a.a.z, a.b.x, a.b.y, a.b.z };
-    std::array<int, 6> vb = {b.a.x, b.a.y, b.a.z, b.b.x, b.b.y, b.b.z };
-    return va < vb;
+    if(a.a != b.a) {
+        return a.a < b.a;        
+    }
+    return a.b < b.b;
 }
 
 const bool operator==(const Shape & a, const Shape & b) {
     return a.a == b.a && a.b == b.b;
 }
 const bool operator==(const PT & a, const PT & b) {
-    return a.x == b.x && a.y == b.y && a.z == b.z;
+    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
 }
 const bool operator!=(const PT & a, const PT & b) {
-    return a.x != b.x || a.y != b.y || a.z != b.z;
+    return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
 }
 
 const bool operator!=(const Shape & a, const Shape & b) {
@@ -71,10 +68,10 @@ int dist(int a, int b, int aw, int bw) {
 
 
 const int distance(const Shape & s1, const Shape & s2) {
-    return dist(s1.a.x, s2.a.x, abs(s1.b.x - s1.a.x),  abs(s2.b.x - s2.a.x))
-            + dist(s1.a.y, s2.a.y, abs(s1.b.y - s1.a.y),  abs(s2.b.y - s2.a.y))
-            + dist(s1.a.z, s2.a.z, abs(s1.b.z - s1.a.z),  abs(s2.b.z - s2.a.z));
-            // + abs(s1.a.z - s2.b.z);
+    return dist(s1.a[0], s2.a[0], abs(s1.b[0] - s1.a[0]),  abs(s2.b[0] - s2.a[0]))
+            + dist(s1.a[1], s2.a[1], abs(s1.b[1] - s1.a[1]),  abs(s2.b[1] - s2.a[1]))
+            + dist(s1.a[2], s2.a[2], abs(s1.b[2] - s1.a[2]),  abs(s2.b[2] - s2.a[2]));
+            // + abs(s1.a[2] - s2.b[2]);
 }
 
 const int distance(const PT & pt, const Shape & s2) {
@@ -82,25 +79,25 @@ const int distance(const PT & pt, const Shape & s2) {
 }
 
 const bool operator<(const PT & a, const PT & b) {
-    if(a.x != b.x) return a.x < b.x;
-    if(a.y != b.y) return a.y < b.y;
-    return a.z < b.z;
+    if(a[0] != b[0]) return a[0] < b[0];
+    if(a[1] != b[1]) return a[1] < b[1];
+    return a[2] < b[2];
 }
 
 const PT min(const PT & a, const PT & b) {
     using std::min;
     return PT(
-        min(a.x, b.x),
-        min(a.y, b.y),
-        min(a.z, b.z));
+        min(a[0], b[0]),
+        min(a[1], b[1]),
+        min(a[2], b[2]));
 }
 
 const PT max(const PT & a, const PT & b) {
     using std::max;
     return PT(
-        max(a.x, b.x),
-        max(a.y, b.y),
-        max(a.z, b.z));
+        max(a[0], b[0]),
+        max(a[1], b[1]),
+        max(a[2], b[2]));
 }
 
 const bool collides(const PT & p, const Shape & s2) {
@@ -114,15 +111,15 @@ const bool collides(const int ax1, const int ax2, const int bx1, const int bx2) 
 }
 
 const bool collides(const Shape & s1, const Shape & s2) {
-    return collides(s1.a.x, s1.b.x, s2.a.x, s2.b.x) &&
-            collides(s1.a.y, s1.b.y, s2.a.y, s2.b.y) &&
-            collides(s1.a.z, s1.b.z, s2.a.z, s2.b.z);
+    return collides(s1.a[0], s1.b[0], s2.a[0], s2.b[0]) &&
+            collides(s1.a[1], s1.b[1], s2.a[1], s2.b[1]) &&
+            collides(s1.a[2], s1.b[2], s2.a[2], s2.b[2]);
 }
 
 Shape::Shape(const PT a_, const PT b_): a(min(a_,b_)), b(max(a_,b_))  {}
 
 Shape Shape::expand(int spacing) const {
-    return Shape(PT(a.x - spacing, a.y - spacing, a.z), PT(b.x + spacing, b.y + spacing, b.z));
+    return Shape(PT(a[0] - spacing, a[1] - spacing, a[2]), PT(b[0] + spacing, b[1] + spacing, b[2]));
 }
 
 
@@ -130,9 +127,9 @@ Shape Shape::expand(int spacing) const {
 const bool sphere_collides(const PT center, int radius32, const int64_t y, const int z, const int64_t x1, const int64_t x2) {
   // (x - h)^2 + (y - k)^2 + (z - l)^2 == r^2
   
-  int64_t h = center.x;
-  int64_t k = center.y;
-  int64_t l = center.z;
+  int64_t h = center[0];
+  int64_t k = center[1];
+  int64_t l = center[2];
   int64_t r = radius32;
 
   int64_t a = 1;  
@@ -160,12 +157,12 @@ const bool sphere_collides(const PT center, int radius32, const int64_t y, const
 const bool sphere_collides(const PT center, int radius32, const PT low,
                            const PT high) {
   
-  const PT transposed{center.y, center.x, center.z};
+  const PT transposed{center[1], center[0], center[2]};
 
-  return sphere_collides(center, radius32, low.y, low.z, high.x, low.x)
-    ||  sphere_collides(center, radius32, high.y, low.z, high.x, low.x)
-    || sphere_collides(transposed, radius32, low.x, low.z, high.y, low.y)
-    || sphere_collides(transposed, radius32, high.x, low.z, high.y, low.y)
+  return sphere_collides(center, radius32, low[1], low[2], high[0], low[0])
+    ||  sphere_collides(center, radius32, high[1], low[2], high[0], low[0])
+    || sphere_collides(transposed, radius32, low[0], low[2], high[1], low[1])
+    || sphere_collides(transposed, radius32, high[0], low[2], high[1], low[1])
     || sphere_contains(center, radius32, low, high);
 
 }
@@ -174,8 +171,8 @@ const bool diamond_collides(const Shape & center, int radius32, const PT low, co
   return distance(center, Shape{low, high}) <= radius32;
 }
 const bool diamond_contains(const Shape & center, int radius32, const PT low, const PT high) {
-  PT a{low.x, high.y, low.z};
-  PT b{high.x, low.y, low.z};
+  PT a{low[0], high[1], low[2]};
+  PT b{high[0], low[1], low[2]};
   return distance(low, center) <= radius32 
     && distance(high, center) <= radius32
     && distance(a, center) <= radius32
@@ -187,12 +184,12 @@ const bool sphere_contains(const PT center, int radius32, const PT low,
                            const PT high) {
   int64_t radius = radius32;
   int64_t s_radius = radius * radius;
-  for (int x : {high.x, low.x}) {
-    for (int y : {high.y, low.y}) {
-      for (int z : {high.z, low.z}) {
-        int64_t dx = (x - center.x);
-        int64_t dy = (y - center.y);
-        int64_t dz = (z - center.z);
+  for (int x : {high[0], low[0]}) {
+    for (int y : {high[1], low[1]}) {
+      for (int z : {high[2], low[2]}) {
+        int64_t dx = (x - center[0]);
+        int64_t dy = (y - center[1]);
+        int64_t dz = (z - center[2]);
         int64_t p_radius = dx * dx + dy * dy + dz * dz;
         if (p_radius > s_radius) {
           return false;

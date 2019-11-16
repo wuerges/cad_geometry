@@ -104,9 +104,9 @@ std::vector<Shape> RTree::collect_diamond_2(const Shape & u, unsigned radius1, u
 }
 
 void to_intv(const PT & p, int* v) {
-    v[0] = p.x;
-    v[1] = p.y;
-    v[2] = p.z;
+    v[0] = p[0];
+    v[1] = p[1];
+    v[2] = p[2];
 }
 
 RTree::MyTree::Rect to_rect(const Shape & s) {

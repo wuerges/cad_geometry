@@ -1,15 +1,21 @@
 #pragma once
 #include <iostream>
+#include <array>
 
 namespace geometry {
 
     using std::ostream;
     
     struct PT {
-      PT(int _x, int _y, int _z): x(_x), y(_y), z(_z) {}
+      PT(int _x, int _y, int _z) {
+        coords[0] = _x;
+        coords[1] = _y;
+        coords[2] = _z;
+
+      }
       PT() {}
 
-      int x, y, z;
+      std::array<int, 3> coords;
       int operator[](int i) const;
 
       friend ostream & operator<<(ostream &out, const PT & p);
@@ -76,8 +82,8 @@ namespace std {
       // second and third and combine them using XOR
       // and bit shifting:
 
-      return hash<int>()(k.a.x) ^ hash<int>()(k.a.y) ^ hash<int>()(k.a.z) 
-           ^ hash<int>()(k.b.x) ^ hash<int>()(k.b.y) ^ hash<int>()(k.b.z) ;
+      return hash<int>()(k.a[0]) ^ hash<int>()(k.a[1]) ^ hash<int>()(k.a[2]) 
+           ^ hash<int>()(k.b[0]) ^ hash<int>()(k.b[1]) ^ hash<int>()(k.b[2]) ;
     }
   };
 
