@@ -22,25 +22,28 @@ void RTree::add(const Shape &shape) {
     tree.Insert(v1, v2, id);
 }
 
-int RTree::visit_diamond(const Shape & center, unsigned radius, 
-    const std::function <bool (const Shape &)>& f
-    ) const {
-    auto p = to_rect(center);    
-    return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
-}
+// template<typename Func>
+// int RTree::visit_diamond(const Shape & center, unsigned radius, 
+//     const Func& f
+//     ) const {
+//     auto p = to_rect(center);    
+//     return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
+// }
 
-int RTree::visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
-    const std::function <bool (const Shape &)>& f
-    ) const {
-    auto p = to_rect(center);    
-    return tree.SearchDiamond(p.m_min, p.m_max, radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
-}
+// template<typename Func>
+// int RTree::visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
+//     const Func& f
+//     ) const {
+//     auto p = to_rect(center);    
+//     return tree.SearchDiamond(p.m_min, p.m_max, radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
+// }
 
-int RTree::visit(const Shape & center, 
-    const std::function <bool (const Shape &)>& f) const {
-    auto p = to_rect(center);    
-    return tree.Search(p.m_min, p.m_max, [&f,this](int i) { return f(shapes[i]); });
-}
+// template<typename Func>
+// int RTree::visit(const Shape & center, 
+//     const Func& f) const {
+//     auto p = to_rect(center);    
+//     return tree.Search(p.m_min, p.m_max, [&f,this](int i) { return f(shapes[i]); });
+// }
 
 
 bool RTree::hits(const PT l, const PT r) const {
