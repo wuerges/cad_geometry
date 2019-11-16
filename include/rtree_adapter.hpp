@@ -10,8 +10,6 @@ namespace geometry {
 
 using std::vector;
 
-void to_intv(const PT & p, int* v);
-
 class RTree {
 
     vector<Shape> shapes;
@@ -28,49 +26,24 @@ public:
     std::vector<Shape> collect_diamond(const Shape & center, unsigned radius) const;
     std::vector<Shape> collect_diamond_2(const Shape & center, unsigned radius1, unsigned radius2) const;
   
-
-    // template<typename Func>
-    // int visit(const Shape & center, 
-    //     const Func& f) const ;
-
-    // template<typename Func>
-    // int visit_diamond(const Shape & center, unsigned radius, 
-    //     const Func& f) const;
-    
-    // template<typename Func>
-    // int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
-    //     const Func& f) const;
-    
-
-    MyTree::Rect to_rect(const Shape & s) const {
-        MyTree::Rect r;
-        to_intv(s.a, r.m_min);    
-        to_intv(s.b, r.m_max);
-        return r;
-    }
-
-
     template<typename Func>
-    int visit_diamond(const Shape & center, unsigned radius, 
+    inline int visit_diamond(const Shape & center, unsigned radius, 
         const Func& f
         ) const {
-        auto p = to_rect(center);    
-        return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
+        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius, [&f,this](int i)->bool { return f(shapes[i]); });
     }
 
     template<typename Func>
-    int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
+    inline int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
         const Func& f
         ) const {
-        auto p = to_rect(center);    
-        return tree.SearchDiamond(p.m_min, p.m_max, radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
+        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
     }
 
     template<typename Func>
-    int visit(const Shape & center, 
+    inline int visit(const Shape & center, 
         const Func& f) const {
-        auto p = to_rect(center);    
-        return tree.Search(p.m_min, p.m_max, [&f,this](int i) { return f(shapes[i]); });
+        return tree.Search(center.a.coords.begin(), center.b.coords.begin(), [&f,this](int i) { return f(shapes[i]); });
     }
 };
 

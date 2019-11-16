@@ -15,36 +15,8 @@ void RTree::add(const Shape &shape) {
     int id = shapes.size();
     shapes.push_back(shape);
     
-    int v1[3], v2[3];
-    to_intv(shape.a, v1);
-    to_intv(shape.b, v2);
-    
-    tree.Insert(v1, v2, id);
+    tree.Insert(shape.a.coords.begin(), shape.b.coords.begin(), id);
 }
-
-// template<typename Func>
-// int RTree::visit_diamond(const Shape & center, unsigned radius, 
-//     const Func& f
-//     ) const {
-//     auto p = to_rect(center);    
-//     return tree.SearchDiamond(p.m_min, p.m_max, radius, [&f,this](int i)->bool { return f(shapes[i]); });
-// }
-
-// template<typename Func>
-// int RTree::visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
-//     const Func& f
-//     ) const {
-//     auto p = to_rect(center);    
-//     return tree.SearchDiamond(p.m_min, p.m_max, radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
-// }
-
-// template<typename Func>
-// int RTree::visit(const Shape & center, 
-//     const Func& f) const {
-//     auto p = to_rect(center);    
-//     return tree.Search(p.m_min, p.m_max, [&f,this](int i) { return f(shapes[i]); });
-// }
-
 
 bool RTree::hits(const PT l, const PT r) const {
     bool found = false;
@@ -104,19 +76,6 @@ std::vector<Shape> RTree::collect_diamond_2(const Shape & u, unsigned radius1, u
         return true;
     });
     return res; 
-}
-
-void to_intv(const PT & p, int* v) {
-    v[0] = p[0];
-    v[1] = p[1];
-    v[2] = p[2];
-}
-
-RTree::MyTree::Rect to_rect(const Shape & s) {
-    RTree::MyTree::Rect r;
-    to_intv(s.a, r.m_min);    
-    to_intv(s.b, r.m_max);
-    return r;
 }
 
 }
