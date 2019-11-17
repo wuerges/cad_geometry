@@ -18,7 +18,7 @@ namespace rc {
     static Gen<PT> arbitrary() {
       return gen::map(genPT,
         [](array<int, 3> vs) {
-          return PT(vs[0], vs[1], vs[2]);
+          return PT(vs.begin());
         });
     }
   };
@@ -30,7 +30,7 @@ namespace rc {
         [](const array<PT, 2> pts) {
             PT a = min(pts[0], pts[1]);
             PT b = max(pts[0], pts[1]);
-            a.z = b.z;
+            a.coords[2] = b[2];
           return Shape(a, b);
         });
     }

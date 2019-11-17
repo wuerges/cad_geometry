@@ -8,6 +8,7 @@
 #include <geometry.hpp>
 #include <set>
 #include <vector>
+#include <algorithm>
 
 #include "generators.hpp"
 
@@ -22,17 +23,24 @@ using namespace std;
 //     return r;
 // }
 
-void test_rtree_distance(const Shape &a, const Shape &b) {
+void test_rtree_distance(const Shape &s1, const Shape &s2) {
 
     RTree rtree;
 
-    RTree::MyTree::Rect ra = to_rect(a), rb = to_rect(b);
+    RTree::MyTree::Rect r1, r2;
+    copy(s1.a.coords.begin(), s1.a.coords.end(), r1.m_min);
+    copy(s1.b.coords.begin(), s1.b.coords.end(), r1.m_max);
     
-    RC_LOG() << "RA={a=" << ra.m_min[0] << ' ' << ra.m_min[1] << ' '  << ra.m_min[2] << "}{b=" << ra.m_max[0] << ' ' << ra.m_max[1] << ' '  << ra.m_max[2] << "}\n";
+    copy(s2.a.coords.begin(), s2.a.coords.end(), r2.m_min);
+    copy(s2.b.coords.begin(), s2.b.coords.end(), r2.m_max);
+
+    //  = to_rect(a), rb = to_rect(b);
     
-    RC_LOG() << "RB={a=" << rb.m_min[0] << ' ' << rb.m_min[1] << ' '  << rb.m_min[2] << "}{b=" << rb.m_max[0] << ' ' << rb.m_max[1] << ' '  << rb.m_max[2] << "}\n";
+    RC_LOG() << "RA={a=" << r1.m_min[0] << ' ' << r1.m_min[1] << ' '  << r1.m_min[2] << "}{b=" << r1.m_max[0] << ' ' << r1.m_max[1] << ' '  << r1.m_max[2] << "}\n";
     
-    RC_ASSERT(distance(a, b) == rtree.tree.distance(&ra, &rb));
+    RC_LOG() << "RB={a=" << r2.m_min[0] << ' ' << r2.m_min[1] << ' '  << r2.m_min[2] << "}{b=" << r2.m_max[0] << ' ' << r2.m_max[1] << ' '  << r2.m_max[2] << "}\n";
+    
+    RC_ASSERT(distance(s1, s2) == rtree.tree.distance(&r1, &r2));
 }
 
 
@@ -45,24 +53,27 @@ void test_rtree_collect(vector<Shape> shapes) {
     rtree.populate(shapes);
 
     for (const Shape &s : shapes) {
-        auto res = rtree.collect(s.a, s.b);
-        set<Shape> shapeset;
-        shapeset.insert(res.begin(), res.end());
+        // auto res = rtree.collect(s.a, s.b);
+        set<const Shape *> shapeset;
+        rtree.visit(s, [&](const Shape * v) {
+            shapeset.insert(v);
+            return true;
+        });
 
-        RC_ASSERT(shapeset.find(s) != shapeset.end());
+        RC_ASSERT(shapeset.find(&s) != shapeset.end());
 
         for(const Shape &z : shapes) {
             RC_LOG() << "\n-------- error ----------\n";
             RC_LOG() << "center=" << s << "\n";
             RC_LOG() << "shape=" << z << "\n";
             RC_LOG() << "  distance=" << distance(s, z) << "\n";
-            RC_LOG() << "  found ? " << (shapeset.find(s) != shapeset.end() ? "true" : "false") << '\n';
+            RC_LOG() << "  found ? " << (shapeset.count(&s) > 0 ? "true" : "false") << '\n';
             
             if(collides(s, z) ) {
-                RC_ASSERT(shapeset.find(z) != shapeset.end());
+                RC_ASSERT(shapeset.count(&z) > 0);
             }
             else {
-                RC_ASSERT(shapeset.find(z) == shapeset.end());
+                RC_ASSERT(shapeset.count(&z) == 0);
             }
         }
     }   
@@ -82,24 +93,26 @@ void test_rtree_collect_diamond(vector<Shape> shapes, unsigned radius) {
   
 
     for (const Shape &s : shapes) {
-        auto res = rtree.collect_diamond(s, radius);
-        set<Shape> shapeset;
-        shapeset.insert(res.begin(), res.end());
+        set<const Shape *> shapeset;
+        rtree.visit_diamond(s, radius, [&](const Shape * v) {
+            shapeset.insert(v);
+            return true;
+        });
 
-        RC_ASSERT(shapeset.find(s) != shapeset.end());
+        RC_ASSERT(shapeset.count(&s) > 0);
 
         for(const Shape &z : shapes) {
             RC_LOG() << "\n------------------\n";
             RC_LOG() << "center=" << s << "\n";
             RC_LOG() << "shape=" << z << "\n";
             RC_LOG() << "  distance=" << distance(s, z) << "\n";
-            RC_LOG() << "  found ? " << (shapeset.find(z) != shapeset.end() ? "true" : "false") << '\n';
+            RC_LOG() << "  found ? " << (shapeset.count(&z) >0 ? "true" : "false") << '\n';
             
             if(distance(s, z) <= radius) {
-                RC_ASSERT(shapeset.find(z) != shapeset.end());
+                RC_ASSERT(shapeset.count(&z) > 0);
             }
             else {
-                RC_ASSERT(shapeset.find(z) == shapeset.end());
+                RC_ASSERT(shapeset.count(&z) == 0);
             }
         }
     }   
