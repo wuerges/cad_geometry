@@ -399,8 +399,9 @@ public:
     int radius1, 
     int radius2, 
     const FUNC& callback) const;
-
+public:
   Node* m_root;                                    ///< Root of tree
+protected:
   ELEMTYPEREAL m_unitSphereVolume;                 ///< Unit sphere constant for required number of dimensions
 };
 

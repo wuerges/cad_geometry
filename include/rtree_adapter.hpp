@@ -22,10 +22,7 @@ public:
     void add(const Shape &shape);
 
     bool hits(const PT l, const PT r) const;
-    // std::vector<Shape> collect(const PT l, const PT r) const;
     std::vector<Shape> neighboors_diamond(const Shape &u, size_t number) const;
-    // std::vector<Shape> collect_diamond(const Shape & center, unsigned radius) const;
-    // std::vector<Shape> collect_diamond_2(const Shape & center, unsigned radius1, unsigned radius2) const;
   
     template<typename Func>
     inline int visit_diamond(const Shape & center, unsigned radius, 
@@ -51,13 +48,13 @@ public:
 };
 
 struct RTreeQueue {
-    Shape center;
-    
-    std::multimap<int, RTree::MyTree::Branch*> queue;
-
+    RTreeQueue(const Shape & c, const RTree & t);
     int peek() const ;
-    Shape pop();
-    void push(RTree::MyTree::Branch*);
+    const Shape * pop();
+private:    
+    const Shape center;
+    void push(const RTree::MyTree::Branch&);
+    std::multimap<const int, const RTree::MyTree::Branch*> queue;
 };
 
 

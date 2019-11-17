@@ -24,18 +24,6 @@ bool RTree::hits(const PT l, const PT r) const {
     });
     return found;    
 }
-// std::vector<Shape> RTree::collect(const PT l, const PT r) const {
-//     std::vector<Shape> res;
-//     std::set<Shape> temp;
-    
-//     const Shape center{l,r};
-//     visit(center, [&temp](const Shape * x) {
-//         temp.insert(*x);
-//         return true;
-//     });
-//     for(auto & x : temp) { res.push_back(x); }
-//     return res;
-// }
 
 std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) const {
 
@@ -56,26 +44,6 @@ std::vector<Shape> RTree::neighboors_diamond(const Shape &u, size_t number) cons
     return res;
 }
 
-
-// std::vector<Shape> RTree::collect_diamond(const Shape & u, unsigned radius) const {
-//     std::vector<Shape> res;
-//     visit_diamond(u, radius, [&res](const Shape * v) {
-//         res.push_back(*v);
-//         return true;
-//     });
-//     return res; 
-
-// }
-// std::vector<Shape> RTree::collect_diamond_2(const Shape & u, unsigned radius1, unsigned radius2) const {
-//    std::vector<Shape> res;
-//     visit_diamond_2(u, radius1, radius2, [&res](const Shape * v) {
-//         res.push_back(*v);
-//         return true;
-//     });
-//     return res; 
-// }
-
-
 int RTreeQueue::peek() const {
     if(queue.empty()) {
         return 1e9;
@@ -83,18 +51,33 @@ int RTreeQueue::peek() const {
     return queue.begin()->first;
 
 }
-Shape RTreeQueue::pop() {
+const Shape * RTreeQueue::pop() {
     auto [k, branch] = *queue.begin();
     queue.erase(queue.begin());
 
     if(branch->m_child == NULL){
-        // return branch->m_data;
+        return branch->m_data;    
     }
-    // TODO COMPLETELY WRONG
+
+    for(int i = 0; i < branch->m_child->m_count; ++i) {
+        push(branch->m_child->m_branch[i]);
+    }
+
     return pop();
 }
-void RTreeQueue::push(RTree::MyTree::Branch*) {
-
+void RTreeQueue::push(const RTree::MyTree::Branch & branch)  {
+    Shape aux(PT(branch.m_rect.m_min), PT(branch.m_rect.m_max));
+    queue.emplace(distance(aux, center), &branch);
 }
+
+RTreeQueue::RTreeQueue(const Shape & c, const RTree & t)
+:center(c) {
+    const RTree::MyTree::Node * root = t.tree.m_root;
+    for(int i = 0; i < root->m_count; ++i) {
+        push(root->m_branch[i]);
+    }
+}
+
+
 
 }
