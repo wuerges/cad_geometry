@@ -13,10 +13,10 @@ using std::vector;
 
 class RTree {
 
-    vector<Shape> shapes;
+    // vector<const Shape> shapes;
 
 public:
-    using MyTree = rtree::RTree<int, int, 3, double>;
+    using MyTree = rtree::RTree<const Shape*, int, 3, double>;
     MyTree tree;
     void populate(const std::vector<Shape> &param);
     void add(const Shape &shape);
@@ -31,20 +31,20 @@ public:
     inline int visit_diamond(const Shape & center, unsigned radius, 
         const Func& f
         ) const {
-        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius, [&f,this](int i)->bool { return f(shapes[i]); });
+        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius, f);
     }
 
     template<typename Func>
     inline int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
         const Func& f
         ) const {
-        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius1,  radius2, [&f,this](int i)->bool { return f(shapes[i]); });
+        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius1,  radius2, f);
     }
 
     template<typename Func>
     inline int visit(const Shape & center, 
         const Func& f) const {
-        return tree.Search(center.a.coords.begin(), center.b.coords.begin(), [&f,this](int i) { return f(shapes[i]); });
+        return tree.Search(center.a.coords.begin(), center.b.coords.begin(), f);
     }
 
 
@@ -53,7 +53,11 @@ public:
 struct RTreeQueue {
     Shape center;
     
-    std::multimap<double, RTree::MyTree::Branch> queue;
+    std::multimap<int, RTree::MyTree::Branch*> queue;
+
+    int peek() const ;
+    Shape pop();
+    void push(RTree::MyTree::Branch*);
 };
 
 

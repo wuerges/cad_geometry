@@ -7,6 +7,11 @@ namespace geometry {
     using std::ostream;
     
     struct PT {
+      PT(const int v[3]) {
+        coords[0] = v[0];
+        coords[1] = v[1];
+        coords[2] = v[2];
+      }
       PT(int _x, int _y, int _z) {
         coords[0] = _x;
         coords[1] = _y;
