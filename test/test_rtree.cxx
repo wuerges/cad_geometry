@@ -43,6 +43,29 @@ void test_rtree_distance(const Shape &s1, const Shape &s2) {
     RC_ASSERT(distance(s1, s2) == rtree.tree.distance(&r1, &r2));
 }
 
+void test_rtree_iterate_neighboors(const Shape & center, const vector<Shape> & shapes) {
+    
+    vector<const Shape *> ordered;
+    for(auto & s : shapes) {
+        ordered.push_back(&s);
+    }
+
+    sort(ordered.begin(), ordered.end(), 
+    [&](auto x1, auto x2) {  
+        return distance(*x1, center) < distance(*x2, center); 
+    });
+
+    RTree rtree;
+    rtree.populate(shapes);
+    RTreeQueue rqueue(center, rtree);
+
+    int i = 0;
+    while(!rqueue.empty()) {
+        auto x = rqueue.pop();
+        RC_ASSERT(distance(*x, center) == distance(*ordered[i], center));
+        ++i;
+    }
+}
 
 void test_rtree_collect(vector<Shape> shapes) {
     sort(shapes.begin(), shapes.end());
@@ -183,7 +206,7 @@ int main () {
     rc::check("Test rtree collect.", test_rtree_collect);
 
     rc::check("Check rtree_collect_diamond.", test_rtree_collect_diamond);
-    
+    rc::check("Test if RQueue is in order", test_rtree_iterate_neighboors);
 
     return 0;
 

@@ -51,6 +51,7 @@ struct RTreeQueue {
     RTreeQueue(const Shape & c, const RTree & t);
     int peek() const ;
     const Shape * pop();
+    bool empty() const;
 private:    
     const Shape center;
     void push(const RTree::MyTree::Branch&);

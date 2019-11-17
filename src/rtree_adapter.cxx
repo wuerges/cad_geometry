@@ -51,6 +51,9 @@ int RTreeQueue::peek() const {
     return queue.begin()->first;
 
 }
+bool RTreeQueue::empty() const {
+    return queue.empty();
+}
 const Shape * RTreeQueue::pop() {
     auto [k, branch] = *queue.begin();
     queue.erase(queue.begin());
@@ -77,6 +80,7 @@ RTreeQueue::RTreeQueue(const Shape & c, const RTree & t)
         push(root->m_branch[i]);
     }
 }
+
 
 
 
