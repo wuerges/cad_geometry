@@ -51,6 +51,10 @@ namespace geometry {
 
       Shape expand(int spacing) const ;
 
+      friend const Shape minimumBound(const Shape & s1, const Shape & s2);
+
+      double area() const;
+
     };    
 
 

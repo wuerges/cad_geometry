@@ -4,11 +4,12 @@
 #include <RTree.h>
 
 #include <vector>
-
+#include <multimap>
 
 namespace geometry {
 
 using std::vector;
+
 
 class RTree {
 
@@ -45,6 +46,13 @@ public:
         const Func& f) const {
         return tree.Search(center.a.coords.begin(), center.b.coords.begin(), [&f,this](int i) { return f(shapes[i]); });
     }
+
+
+};
+
+struct RTreeQueue {
+    Shape center;
+    
 };
 
 

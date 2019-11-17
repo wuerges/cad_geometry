@@ -200,7 +200,16 @@ const bool sphere_contains(const PT center, int radius32, const PT low,
   return true;
 }
 
-
+const Shape minimumBound(const Shape & s1, const Shape & s2) {
+    return Shape(min(s1.a, s2.a), max(s1.b, s2.b));
 }
 
+double Shape::area() const {
 
+    double dx = abs(a[0] - b[0]);
+    double dy = abs(a[1] - b[1]);
+    double dz = abs(a[2] - b[2]);
+    return dx * dy * dz;
+}
+
+}
