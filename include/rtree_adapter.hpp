@@ -4,7 +4,7 @@
 #include <RTree.h>
 
 #include <vector>
-#include <multimap>
+#include <map>
 
 namespace geometry {
 
@@ -53,6 +53,7 @@ public:
 struct RTreeQueue {
     Shape center;
     
+    std::multimap<double, RTree::MyTree::Branch> queue;
 };
 
 

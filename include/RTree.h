@@ -55,11 +55,10 @@ template<class DATATYPE, class ELEMTYPE, int NUMDIMS,
          class ELEMTYPEREAL = ELEMTYPE, int TMAXNODES = 8, int TMINNODES = TMAXNODES / 2>
 class RTree
 {
-protected: 
 
-  struct Node;  // Fwd decl.  Used by other internal structs and iterator
 
 public:
+  struct Node;  // Fwd decl.  Used by other internal structs and iterator
 
   // These constant must be declared after Branch and before Node struct
   // Stuck up here for MSVC 6 compiler.  NSVC .NET 2003 is much happier.
@@ -296,7 +295,7 @@ public:
     ELEMTYPE m_min[NUMDIMS];                      ///< Min dimensions of bounding box 
     ELEMTYPE m_max[NUMDIMS];                      ///< Max dimensions of bounding box 
   };
-protected:
+public:
 
   /// May be data or may be another subtree
   /// The parents level determines this.
@@ -309,6 +308,7 @@ protected:
   };
 
   /// Node for each branch level
+public:
   struct Node
   {
     bool IsInternalNode()                         { return (m_level > 0); } // Not a leaf, but a internal node
