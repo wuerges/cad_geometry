@@ -52,8 +52,8 @@ struct RTreeQueue {
     int peek() const ;
     const Shape * pop();
     bool empty() const;
-private:    
     const Shape center;
+private:    
     void push(const RTree::MyTree::Branch&);
     std::multimap<const int, const RTree::MyTree::Branch*> queue;
 };
