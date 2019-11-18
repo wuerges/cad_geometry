@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <map>
+#include <list>
 
 namespace geometry {
 
@@ -56,6 +57,20 @@ struct RTreeQueue {
 private:    
     void push(const RTree::MyTree::Branch&);
     std::multimap<const int, const RTree::MyTree::Branch*> queue;
+};
+
+struct RTreeQueue2 {
+    RTreeQueue2(const Shape & c, const RTree & t);
+    int peek() ;
+    const Shape * pop();
+    bool empty();
+    const Shape center;
+private: 
+    int radius1;
+    int radius2;
+    const RTree & tree;
+    void load();
+    std::list<const Shape*> queue;
 };
 
 
