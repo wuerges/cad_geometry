@@ -16,19 +16,19 @@ std::ostream & operator<<(std::ostream & out, const Shape & s) {
     // out << ")";
     return out;
 }
-std::ostream & operator<<(std::ostream & out, const PT & s) {
-    out << "PT{"<<s[0]<<", "<<s[1]<<", "<<s[2]<<"}";
-    return out;
-}
+// std::ostream & operator<<(std::ostream & out, const PT & s) {
+//     out << "PT{"<<s[0]<<", "<<s[1]<<", "<<s[2]<<"}";
+//     return out;
+// }
 
 
-int PT::operator[](int i) const {
-    return coords[i]; 
-}
+// int PT::operator[](int i) const {
+//     return coords[i]; 
+// }
 
-const int manhatan(const PT & a, const PT & b) {
-    return abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2]);
-}
+// const int manhatan(const PT & a, const PT & b) {
+//     return abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2]);
+// }
 
 const bool operator<(const Shape & a, const Shape & b) {
     if(a.a != b.a) {
@@ -40,12 +40,12 @@ const bool operator<(const Shape & a, const Shape & b) {
 const bool operator==(const Shape & a, const Shape & b) {
     return a.a == b.a && a.b == b.b;
 }
-const bool operator==(const PT & a, const PT & b) {
-    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
-}
-const bool operator!=(const PT & a, const PT & b) {
-    return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
-}
+// const bool operator==(const PT & a, const PT & b) {
+//     return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+// }
+// const bool operator!=(const PT & a, const PT & b) {
+//     return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
+// }
 
 const bool operator!=(const Shape & a, const Shape & b) {
     return a.a != b.a || a.b != b.b;
@@ -84,21 +84,21 @@ const bool operator<(const PT & a, const PT & b) {
     return a[2] < b[2];
 }
 
-const PT min(const PT & a, const PT & b) {
-    using std::min;
-    return PT(
-        min(a[0], b[0]),
-        min(a[1], b[1]),
-        min(a[2], b[2]));
-}
+// const PT min(const PT & a, const PT & b) {
+//     using std::min;
+//     return PT(
+//         min(a[0], b[0]),
+//         min(a[1], b[1]),
+//         min(a[2], b[2]));
+// }
 
-const PT max(const PT & a, const PT & b) {
-    using std::max;
-    return PT(
-        max(a[0], b[0]),
-        max(a[1], b[1]),
-        max(a[2], b[2]));
-}
+// const PT max(const PT & a, const PT & b) {
+//     using std::max;
+//     return PT(
+//         max(a[0], b[0]),
+//         max(a[1], b[1]),
+//         max(a[2], b[2]));
+// }
 
 const bool collides(const PT & p, const Shape & s2) {
     return collides(Shape{p,p}, s2);
@@ -119,7 +119,8 @@ const bool collides(const Shape & s1, const Shape & s2) {
 Shape::Shape(const PT a_, const PT b_): a(min(a_,b_)), b(max(a_,b_))  {}
 
 Shape Shape::expand(int spacing) const {
-    return Shape(PT(a[0] - spacing, a[1] - spacing, a[2]), PT(b[0] + spacing, b[1] + spacing, b[2]));
+
+    return Shape(PT({a[0] - spacing, a[1] - spacing, a[2]}), PT({b[0] + spacing, b[1] + spacing, b[2]}));
 }
 
 
