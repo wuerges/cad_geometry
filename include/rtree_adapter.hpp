@@ -29,23 +29,21 @@ public:
     inline int visit_diamond(const Shape & center, unsigned radius, 
         const Func& f
         ) const {
-        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius, f);
+        return tree.SearchDiamond(center.p1.coords.begin(), center.p2.coords.begin(), radius, f);
     }
 
     template<typename Func>
     inline int visit_diamond_2(const Shape & center, unsigned radius1, unsigned radius2, 
         const Func& f
         ) const {
-        return tree.SearchDiamond(center.a.coords.begin(), center.b.coords.begin(), radius1,  radius2, f);
+        return tree.SearchDiamond(center.p1.coords.begin(), center.p2.coords.begin(), radius1,  radius2, f);
     }
 
     template<typename Func>
     inline int visit(const Shape & center, 
         const Func& f) const {
-        return tree.Search(center.a.coords.begin(), center.b.coords.begin(), f);
+        return tree.Search(center.p1.coords.begin(), center.p2.coords.begin(), f);
     }
-
-
 };
 
 struct RTreeQueue {
@@ -72,9 +70,6 @@ private:
     void load();
     std::list<const Shape*> queue;
 };
-
-
-
 
 
 

@@ -12,7 +12,7 @@ void RTree::populate(const std::vector<Shape> &param) {
 }
 
 void RTree::add(const Shape &shape) {
-    tree.Insert(shape.a.coords.begin(), shape.b.coords.begin(), &shape);
+    tree.Insert(shape.p1.coords.begin(), shape.p2.coords.begin(), &shape);
 }
 
 bool RTree::hits(const PT l, const PT r) const {

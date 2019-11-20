@@ -65,6 +65,22 @@ std::ostream & operator<<(std::ostream & out, const Point<N> & p) {
 template <int N>
 struct Rectangle {
     Point<N> p1, p2;
+    
+    Rectangle(const Point<N> & p1_, const Point<N> & p2_)
+    : p1(min(p1_, p2_))
+    , p2(max(p1_, p2_)) {}
+    Rectangle() {}
+
+    Rectangle<N> expand(int spacing) const;
+
+    double area() const {
+      double r = 1;
+      for(int i = 0; i < N; ++i) {
+        r *= abs(p1[i] - p2[i]);
+      }
+      return r;
+    }
+
 };
 
 
@@ -81,7 +97,7 @@ bool operator==(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 
 template<int N>
 bool operator!=(const Rectangle<N> & r1, const Rectangle<N> & r2) {
-    return r1.p1 != r2.p1 && r1.p2 != r2.p2;
+    return r1.p1 != r2.p1 || r1.p2 != r2.p2;
 }
 
 template<int N>
@@ -172,7 +188,43 @@ int distance(const Rectangle<N> & r1, const Rectangle<N> & r2) {
     return result;
 }
 
+template<int N>
+int distance(const Point<N> & r1, const Rectangle<N> & r2) {
+  return distance(Rectangle<N>(r1, r1), r2);
+}
 
+const bool collides(const int ax1, const int ax2, const int bx1, const int bx2);
+// const bool collides(const int ax1, const int ax2, const int bx1, const int bx2) {
+//     return (ax1 <= bx1 && bx1 <= ax2) 
+//         || (ax1 <= bx2 && bx2 <= ax2) 
+//         || (bx1 <= ax1 && ax1 <= bx2);
+// }
+
+template<int N>
+const bool collides(const Rectangle<N> & s1, const Rectangle<N> & s2) {
+  for(int i = 0; i < N; ++i) {
+    if(!collides(s1.p1[i],s1.p2[i], s2.p1[i], s2.p2[i])) {
+      return false;
+    }
+  }
+  return true;
+    // return collides(s1.a[0], s1.b[0], s2.a[0], s2.b[0]) &&
+    //         collides(s1.a[1], s1.b[1], s2.a[1], s2.b[1]) &&
+    //         collides(s1.a[2], s1.b[2], s2.a[2], s2.b[2]);
+}
+
+template<int N>
+const bool collides(const Point<N> & p, const Rectangle<N> & s2) {
+  for(int i = 0; i < N; ++i) {
+    if(!collides(p[i],p[i], s2.p1[i], s2.p2[i])) {
+      return false;
+    }
+  }
+  return true;
+    // return collides(s1.a[0], s1.b[0], s2.a[0], s2.b[0]) &&
+    //         collides(s1.a[1], s1.b[1], s2.a[1], s2.b[1]) &&
+    //         collides(s1.a[2], s1.b[2], s2.a[2], s2.b[2]);
+}
 
 
 using R2 = Rectangle<2>;
@@ -228,49 +280,74 @@ Rectangle<N> square_around(const Point<N> & p, const int distance = 100) {
      * The second point is the high value for the x, y, and z coordinates.
      */
 
-    struct Shape {
-      Shape(const PT _a, const PT _b);      
-      Shape() {}
-      PT a, b;
-      friend const bool collides(const Shape & a, const Shape & b);
-      friend const bool collides(const PT & p, const Shape & b);
-      friend std::ostream & operator<<(std::ostream & out, const Shape & s);
-
-      friend const bool operator<(const Shape & a, const Shape & b);
-      friend const bool operator==(const Shape & a, const Shape & b);
-      friend const bool operator!=(const Shape & a, const Shape & b);
-
-      friend const int distance(const Shape & a, const Shape & b);
-      friend const int distance(const PT & pt, const Shape & s2);
-
-      Shape expand(int spacing) const ;
-
-      friend const Shape minimumBound(const Shape & s1, const Shape & s2);
-
-      double area() const;
-
-    };    
 
 
-const bool sphere_collides(const PT center, int radius32, const int64_t y, const int z, const int64_t x1, const int64_t x2);
-const bool sphere_collides(const PT center, int radius32, const PT low,
-                           const PT high);
-const bool sphere_contains(const PT center, int radius, const PT a, const PT b);
+    // struct Shape {
+    //   Shape(const PT _a, const PT _b);      
+    //   Shape() {}
+    //   PT a, b;
+    //   friend const bool collides(const Shape & a, const Shape & b);
+    //   friend const bool collides(const PT & p, const Shape & b);
+    //   friend std::ostream & operator<<(std::ostream & out, const Shape & s);
 
-const bool diamond_collides(const Shape & center, int radius32, const PT low,
-                           const PT high);
-const bool diamond_contains(const Shape & center, int radius32, const PT low,
-                           const PT high);
+    //   friend const bool operator<(const Shape & a, const Shape & b);
+    //   friend const bool operator==(const Shape & a, const Shape & b);
+    //   friend const bool operator!=(const Shape & a, const Shape & b);
+
+    //   friend const int distance(const Shape & a, const Shape & b);
+    //   friend const int distance(const PT & pt, const Shape & s2);
+
+    //   Shape expand(int spacing) const ;
+
+    //   friend const Shape minimumBound(const Shape & s1, const Shape & s2);
+
+    //   double area() const;
+    // };    
+
+    using Shape = Rectangle<3>;
+
+
+template<int N>
+const bool diamond_collides(const Rectangle<N> & center, int radius32, const Point<N> low, const Point<N> high) {
+  return distance(center, Rectangle<N>{low, high}) <= radius32;
+}
+
+template<int N>
+const bool diamond_contains(const Rectangle<N> & center, int radius32, const Point<N> low, const Point<N> high) {
+  Point<N> a{low[0], high[1], low[2]};
+  Point<N> b{high[0], low[1], low[2]};
+  return distance(low, center) <= radius32 
+    && distance(high, center) <= radius32
+    && distance(a, center) <= radius32
+    && distance(b, center) <= radius32;
+}
+
+template<int N>
+const Rectangle<N> minimumBound(const Rectangle<N> & s1, const Rectangle<N> & s2) {
+    return Rectangle<N>(min(s1.p1, s2.p1), max(s1.p2, s2.p2));
+}
+
+
+// const bool sphere_collides(const PT center, int radius32, const int64_t y, const int z, const int64_t x1, const int64_t x2);
+// const bool sphere_collides(const PT center, int radius32, const PT low,
+//                            const PT high);
+// const bool sphere_contains(const PT center, int radius, const PT a, const PT b);
+
+// const bool diamond_collides(const Shape & center, int radius32, const PT low,
+//                            const PT high);
+// const bool diamond_contains(const Shape & center, int radius32, const PT low,
+//                            const PT high);
+
 
 }
 
 namespace std {
-  using geometry::Shape;
+  using geometry::Rectangle;
 
-  template <>
-  struct hash<Shape>
+  template <int N>
+  struct hash<Rectangle<N>>
   {
-    std::size_t operator()(const Shape& k) const
+    std::size_t operator()(const Rectangle<N>& k) const
     {
       using std::size_t;
       using std::hash;
@@ -280,10 +357,39 @@ namespace std {
       // second and third and combine them using XOR
       // and bit shifting:
 
-      return hash<int>()(k.a[0]) ^ hash<int>()(k.a[1]) ^ hash<int>()(k.a[2]) 
-           ^ hash<int>()(k.b[0]) ^ hash<int>()(k.b[1]) ^ hash<int>()(k.b[2]) ;
+      size_t result = 0;
+      for(int i = 0; i < N; ++i) {
+        result = result ^ hash<int>()(k.p1[i]) ^ hash<int>()(k.p2[i]);
+      }
+      return result;
+
+      // return hash<int>()(k.a[0]) ^ hash<int>()(k.a[1]) ^ hash<int>()(k.a[2]) 
+      //      ^ hash<int>()(k.b[0]) ^ hash<int>()(k.b[1]) ^ hash<int>()(k.b[2]) ;
     }
   };
 
 }
+
+// namespace std {
+//   using geometry::Shape;
+
+//   template <>
+//   struct hash<Shape>
+//   {
+//     std::size_t operator()(const Shape& k) const
+//     {
+//       using std::size_t;
+//       using std::hash;
+//       using std::string;
+
+//       // Compute individual hash values for first,
+//       // second and third and combine them using XOR
+//       // and bit shifting:
+
+//       return hash<int>()(k.a[0]) ^ hash<int>()(k.a[1]) ^ hash<int>()(k.a[2]) 
+//            ^ hash<int>()(k.b[0]) ^ hash<int>()(k.b[1]) ^ hash<int>()(k.b[2]) ;
+//     }
+//   };
+
+// }
 
