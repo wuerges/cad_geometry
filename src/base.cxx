@@ -20,6 +20,17 @@ Rectangle<2> Rectangle<2>::expand(int spacing) const {
       Point<2>({p2[0] + spacing, p2[1] + spacing}));
 }
 
+template<>
+const bool diamond_contains<3>(const Rectangle<3> & center, int radius32, const Point<3> low, const Point<3> high) {
+  Point<3> a{low[0], high[1], low[2]};
+  Point<3> b{high[0], low[1], low[2]};
+  return distance(low, center) <= radius32 
+    && distance(high, center) <= radius32
+    && distance(a, center) <= radius32
+    && distance(b, center) <= radius32;
+}
+
+
 const bool collides(const int ax1, const int ax2, const int bx1, const int bx2) {
     return (ax1 <= bx1 && bx1 <= ax2) 
         || (ax1 <= bx2 && bx2 <= ax2) 

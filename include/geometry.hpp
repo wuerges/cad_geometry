@@ -313,14 +313,7 @@ const bool diamond_collides(const Rectangle<N> & center, int radius32, const Poi
 }
 
 template<int N>
-const bool diamond_contains(const Rectangle<N> & center, int radius32, const Point<N> low, const Point<N> high) {
-  Point<N> a{low[0], high[1], low[2]};
-  Point<N> b{high[0], low[1], low[2]};
-  return distance(low, center) <= radius32 
-    && distance(high, center) <= radius32
-    && distance(a, center) <= radius32
-    && distance(b, center) <= radius32;
-}
+const bool diamond_contains(const Rectangle<N> & center, int radius32, const Point<N> low, const Point<N> high);
 
 template<int N>
 const Rectangle<N> minimumBound(const Rectangle<N> & s1, const Rectangle<N> & s2) {
