@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <array>
+#include <vector>
 #include <optional>
 
 namespace geometry {
@@ -8,7 +9,8 @@ namespace geometry {
 template <int N>
 struct Point {
     Point() {}
-    Point(const int cs[N]) {
+    Point(const std::array<int, N> & arr): coords(arr) {}
+    Point(const int cs[N]) {      
       for(int i = 0; i < N; ++i) {
         coords[i] = cs[i];
       }
@@ -231,6 +233,41 @@ using R2 = Rectangle<2>;
 using R3 = Rectangle<3>;
 using P2 = Point<2>;
 using P3 = Point<3>;
+
+
+std::pair<int,int> closest_point(int a, int aw, int b, int bw);
+
+template<int N>
+std::vector<Point<N>> simple_route(const Rectangle<N>& s, const Rectangle<N> &t) {
+    using std::min, std::max, std::vector, std::array, std::pair;
+    
+    vector<Point<N>> result;
+
+    array<pair<int,int>, N> diffs;
+    for(int i = 0; i < N; ++i) {
+        diffs[i] = closest_point(s.p1[i], s.p2[i] - s.p1[i], t.p1[i], t.p2[i] - t.p1[i]);
+    }
+
+    array<int, N> cs;
+    for(int i = 0; i < N; ++i) {
+        cs[i] = diffs[i].first;
+    }
+
+    Point<N> p(cs);
+    result.push_back(p);
+
+    for(int i = 0; i < N; ++i) {
+        if(diffs[i].first != diffs[i].second) {
+            p.coords[i] = diffs[i].second;
+            result.push_back(p);
+        }
+    }
+    return result;
+    
+}
+
+
+std::vector<P3> simple_route(const P3& s, const P3 &t);
 
 
 template<int N>

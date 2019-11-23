@@ -98,6 +98,42 @@ int disti(int a, int b, int aw, int bw) {
 }
 
 
+
+std::pair<int,int> closest_point(int a, int aw, int b, int bw) {
+    using std::min, std::max;
+    if (a <= b) {
+        return {min(a+aw, b), b};
+    }    
+    else {
+        return {min(b+bw, a), a};
+    }
+}
+
+
+
+std::vector<P3> simple_route(const P3& s, const P3 &t) {
+    using std::min, std::max;
+
+    std::vector<P3> result;
+    result.push_back(s);
+    
+    PT art1 = s;
+
+    art1.coords[0] = t[0];
+    if(s[0] != t[0]) {
+        result.push_back(art1);
+    }
+
+    PT art2 = art1;
+    art2.coords[2] = t[2];
+    if(s[2] != t[2]) {
+        result.push_back(art2);
+    }
+
+    result.push_back(t);
+    return result;
+}
+
 // const int distance(const Shape & s1, const Shape & s2) {
 //     return dist(s1.a[0], s2.a[0], abs(s1.b[0] - s1.a[0]),  abs(s2.b[0] - s2.a[0]))
 //             + dist(s1.a[1], s2.a[1], abs(s1.b[1] - s1.a[1]),  abs(s2.b[1] - s2.a[1]))
