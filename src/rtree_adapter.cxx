@@ -55,6 +55,20 @@ bool RTreeQueue::empty() const {
     return queue.empty();
 }
 const Shape * RTreeQueue::pop() {
+
+    // // while the item to be popped is not a leaf
+    // while(!queue.empty() && queue.begin()->second->m_child != NULL) {
+    //     auto [k, branch] = *queue.begin();
+    //     queue.erase(queue.begin());
+    //     for(int i = 0; i < branch->m_child->m_count; ++i) {
+    //         push(branch->m_child->m_branch[i]);
+    //     }
+    // }
+
+    // auto [k, branch] = *queue.begin();
+    // queue.erase(queue.begin());
+    // return branch->m_data;
+
     auto [k, branch] = *queue.begin();
     queue.erase(queue.begin());
 
