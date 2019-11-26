@@ -37,11 +37,15 @@ struct RTreeQueueTempl {
         return queue.empty();
     }
     
+    using RTree = rtree::RTree<Value*, int, N, double>;
+    
+    virtual void push(const typename RTree::Branch & branch) = 0;
+
+    
     const Key center;
     // RTQ<T, N, TYPE> m;
 
 
-    using RTree = rtree::RTree<Value*, int, N, double>;
     RTreeQueueTempl(const Key & c, const RTree & t): center(c), tree(t) {}
     // typedef rtree::RTree<T*, int, N, double> RTree;
 // private:    
