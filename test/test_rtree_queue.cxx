@@ -1,5 +1,5 @@
-// #include <rtree_queue.hpp>
-#include <rtree_adapter.hpp>
+#include <rtree_queue.hpp>
+// #include <rtree_adapter.hpp>
 #include <RTree.h>
 #include <rapidcheck.h>
 
@@ -9,24 +9,24 @@ using namespace geometry;
 using namespace std;
 
 
-void test_rtree_queue(const Shape & center, vector<Shape> shapes) {
+void test_rtree_queue(const Shape & center, const vector<Shape> & const_shapes) {
 
-    // auto f =[&]() {
-    //     rtree::RTree<const Shape*, int, 3, double> t;
-    //     for(const Shape & s : shapes) {
-    //         t.Insert(s.p1.coords.begin(), s.p2.coords.begin(), &s);
-    //     }
-    //     return t;        
-    // };
-    // const auto tree = f();
-    // RTreeQueue<3, Shape> queue(s, tree);
+    auto f =[&]() {
+        rtree::RTree<const Shape*, int, 3, double> t;
+        for(const Shape & s : const_shapes) {
+            t.Insert(s.p1.coords.begin(), s.p2.coords.begin(), &s);
+        }
+        return t;        
+    };
+    const auto tree = f();
+    RTreeQueue<3, const Shape> queue(center, tree);
 
     
-    RTree tree;
-    tree.populate(shapes);
-    RTreeQueue queue(center, tree);
+    // RTree tree;
+    // tree.populate(const_shapes);
+    // RTreeQueue queue(center, tree);
 
-
+    vector<Shape> shapes = const_shapes;
     sort(shapes.begin(), shapes.end(), [&](auto s1, auto s2) {
         return distance(s1, center) < distance(s2, center);
     });
