@@ -2,9 +2,12 @@
 #include <RTree.h>
 
 #include <map>
-using geometry::Rectangle;
-using geometry::Point;
+// using geometry::Rectangle;
+// using geometry::Point;
 using std::multimap;
+
+namespace geometry {
+
 
 template<int N, typename Value> 
 struct RTreeQueueTempl {
@@ -103,3 +106,5 @@ struct RTreeQueue : public RTreeQueueTempl<N, Value> {
         }
     }
 };
+
+}
