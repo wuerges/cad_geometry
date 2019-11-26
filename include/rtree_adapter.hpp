@@ -46,6 +46,8 @@ public:
     }
 };
 
+
+
 struct RTreeQueue {
     RTreeQueue(const Shape & c, const RTree & t);
     int peek() const ;
@@ -56,6 +58,10 @@ private:
     void push(const RTree::MyTree::Branch&);
     std::multimap<const int, const RTree::MyTree::Branch*> queue;
 };
+
+
+
+
 
 struct RTreeQueueFilter {
 

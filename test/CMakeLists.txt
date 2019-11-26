@@ -9,3 +9,10 @@ target_link_libraries(TestRTree
     cadgeometry
     rapidcheck
   )
+
+add_executable(TesteRTreeQueue test_rtree_queue.cxx)
+target_link_libraries(TesteRTreeQueue
+    cadgeometry
+    rapidcheck
+  )
+      

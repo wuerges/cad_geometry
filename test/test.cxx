@@ -24,8 +24,8 @@ int main(int argc, char ** argv) {
     // PT b(20, 20, 0);
     // PT c(30, 30, 0);
     // PT d(15, 15, 0);
-    PT e(0, 0, 0);
-    PT f(0, 0, 1);
+    PT e{0, 0, 0};
+    PT f{0, 0, 1};
 
     Shape a(e,e);
     cout <<"distance " << distance(a, a) << '\n';

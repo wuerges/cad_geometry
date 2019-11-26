@@ -28,11 +28,11 @@ void test_rtree_distance(const Shape &s1, const Shape &s2) {
     RTree rtree;
 
     RTree::MyTree::Rect r1, r2;
-    copy(s1.a.coords.begin(), s1.a.coords.end(), r1.m_min);
-    copy(s1.b.coords.begin(), s1.b.coords.end(), r1.m_max);
+    copy(s1.p1.coords.begin(), s1.p1.coords.end(), r1.m_min);
+    copy(s1.p2.coords.begin(), s1.p2.coords.end(), r1.m_max);
     
-    copy(s2.a.coords.begin(), s2.a.coords.end(), r2.m_min);
-    copy(s2.b.coords.begin(), s2.b.coords.end(), r2.m_max);
+    copy(s2.p1.coords.begin(), s2.p1.coords.end(), r2.m_min);
+    copy(s2.p2.coords.begin(), s2.p2.coords.end(), r2.m_max);
 
     //  = to_rect(a), rb = to_rect(b);
     
