@@ -8,6 +8,9 @@ target_sources(cadgeometry
   PRIVATE
     src/base.cxx
     src/rtree_adapter.cxx
+    src/rtree_queue.cxx
+    src/rtree_queue_2.cxx
+    src/rtree_queue_filter.cxx
   PUBLIC
     # include/geometry.hpp
     # include/rtree_adapter.hpp

@@ -57,6 +57,26 @@ private:
     std::multimap<const int, const RTree::MyTree::Branch*> queue;
 };
 
+struct RTreeQueueFilter {
+
+    /**
+     * Creates a vertex queue.
+     * 
+     * @param u is the vertexs that defines adjacency.
+     * @param c is the target vertex.
+     * @param t is the tree.
+     */
+    RTreeQueueFilter(const Shape & u, const Shape & c, const RTree & t);
+    int peek() const ;
+    const Shape * pop();
+    bool empty() const;
+    const Shape center;
+    const Shape u;
+private:    
+    void push(const RTree::MyTree::Branch&);
+    std::multimap<const int, const RTree::MyTree::Branch*> queue;
+};
+
 struct RTreeQueue2 {
     RTreeQueue2(const Shape & c, const RTree & t);
     int peek() ;
