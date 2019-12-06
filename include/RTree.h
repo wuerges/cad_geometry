@@ -1296,7 +1296,7 @@ ELEMTYPEREAL RTREE_QUAL::RectVolume(Rect* a_rect)
 
   for(int index=0; index<NUMDIMS; ++index)
   {
-    volume *= a_rect->m_max[index] - a_rect->m_min[index];
+    volume *= std::max(1.0, a_rect->m_max[index] - a_rect->m_min[index]);
   }
   
   ASSERT(volume >= (ELEMTYPEREAL)0);
