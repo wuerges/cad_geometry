@@ -51,7 +51,7 @@ class RTFileStream;  // File I/O helper class, look below for implementation and
 ///        array similar to MFC CArray or STL Vector for returning search query result.
 ///
 template<class DATATYPE, class ELEMTYPE, int NUMDIMS,
-         class ELEMTYPEREAL = ELEMTYPE, int TMAXNODES = 8, int TMINNODES = TMAXNODES / 2>
+         class ELEMTYPEREAL = ELEMTYPE, int TMAXNODES = 3, int TMINNODES = TMAXNODES / 2>
 class RTree
 {
 

@@ -16,7 +16,10 @@ bool RTreeQueue::empty() const {
 const Shape * RTreeQueue::pop() {
 
     // while the item to be popped is not a leaf
+
+    int count = 0;
     while(!queue.empty() && queue.begin()->second->m_child != NULL) {
+        count ++;
         auto [k, branch] = *queue.begin();
         queue.erase(queue.begin());
         for(int i = 0; i < branch->m_child->m_count; ++i) {
@@ -24,6 +27,7 @@ const Shape * RTreeQueue::pop() {
         }
     }
 
+    // std::cout << "popped = " << count << '\n';
     auto [k, branch] = *queue.begin();
     queue.erase(queue.begin());
     return branch->m_data;
