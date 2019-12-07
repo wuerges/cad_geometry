@@ -235,7 +235,18 @@ using P2 = Point<2>;
 using P3 = Point<3>;
 
 
-std::pair<int,int> closest_point(int a, int aw, int b, int bw);
+int closest_point(int a, int aw, int b, int bw);
+
+template<int N> 
+Point<N> closest_point(const Rectangle<N>& s, const Rectangle<N> &t) {
+    Point<N> p;
+
+    for(int i = 0; i < N; ++i) {
+        auto x = closest_point(s.p1[i], s.p2[i] - s.p1[i], t.p1[i], t.p2[i] - t.p1[i]);
+        p.coords[i] = x;
+    }
+    return p;
+}
 
 // template<int N>
 // std::vector<Point<N>> simple_route(const Rectangle<N>& s, const Rectangle<N> &t) {
