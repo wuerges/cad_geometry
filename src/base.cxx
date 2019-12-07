@@ -102,10 +102,10 @@ int disti(int a, int b, int aw, int bw) {
 std::pair<int,int> closest_point(int a, int aw, int b, int bw) {
     using std::min, std::max;
     if (a <= b) {
-        return {min(a+aw, b), b};
+        return {min(a+aw, b), max(a+aw, b)};
     }    
     else {
-        return {min(b+bw, a), a};
+        return {min(b+bw, a), max(b+bw, a)};
     }
 }
 
